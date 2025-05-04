@@ -2,6 +2,7 @@
     <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/cyan</item>
         <item name="colorAccent">@color/cyan</item>
+        <item name="colorPrimaryVariant">@color/cyan</item>
     </style>
 
     <style name="AppTheme.Launcher" parent="Theme.SplashScreen">
