@@ -10,4 +10,9 @@
         <item name="windowSplashScreenAnimatedIcon">@drawable/logo_background</item>
         <item name="postSplashScreenTheme">@style/AppTheme</item>
     </style>
+
+    <style name="AppTheme.Button.Danger" parent="android:Widget.Button">
+        <item name="backgroundTint">@color/red</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
 </resources>

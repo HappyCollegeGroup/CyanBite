@@ -1,5 +1,9 @@
 package fcu.app.cyanbite.ui;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import fcu.app.cyanbite.R;
 
@@ -61,6 +66,27 @@ public class AccountFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_account, container, false);
+        View view =  inflater.inflate(R.layout.fragment_account, container, false);
+        SharedPreferences prefs = getActivity().getSharedPreferences("user_prefs", MODE_PRIVATE);
+
+        ((Button)view.findViewById(R.id.btn_logout)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean("is_login", false);
+                editor.apply();
+
+                navigateTo(LoginActivity.class);
+            }
+        });
+
+        return view;
+    }
+
+    private void navigateTo(Class<?> cls) {
+        Intent intent = new Intent(getActivity(), cls);
+        startActivity(intent);
+        getActivity().finish();
+        getActivity().overridePendingTransition(0, 0);
     }
 }
