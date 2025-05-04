@@ -25,7 +25,6 @@ import com.google.android.material.navigation.NavigationBarView;
 import fcu.app.cyanbite.R;
 
 public class MainActivity extends AppCompatActivity {
-    private Button btnShoppingCart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,31 +40,13 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        Window window = getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.cyan));
-        WindowInsetsControllerCompat insetsController = new WindowInsetsControllerCompat(window, window.getDecorView());
-        insetsController.setAppearanceLightStatusBars(false);
-
-        setSupportActionBar(findViewById(R.id.topAppBar));
-
-        btnShoppingCart = findViewById(R.id.btn_shopping_cart);
-        btnShoppingCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ShoppingCartActivity.class);
-                startActivity(intent);
-            }
-        });
-
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         Fragment orderFragment = OrderFragment.newInstance("", "");
         Fragment groupFragment = GroupFragment.newInstance("", "");
         Fragment restaurantFragment = RestaurantFragment.newInstance("", "");
         Fragment accountFragment = AccountFragment.newInstance("", "");
 
-        setCurrentFragment(restaurantFragment);
+        setCurrentFragment(orderFragment);
 
         bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
