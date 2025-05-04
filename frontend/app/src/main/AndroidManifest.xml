@@ -17,8 +17,14 @@
             android:exported="false" />
         <activity
             android:name=".ui.MainActivity"
-            android:theme="@style/AppTheme.Launcher"
-            android:exported="true">
+            android:exported="false" />
+        <activity
+            android:name=".ui.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.LoginActivity"
+            android:exported="true"
+            android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
