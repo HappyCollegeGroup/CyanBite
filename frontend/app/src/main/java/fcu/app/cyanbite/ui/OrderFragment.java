@@ -107,7 +107,7 @@ public class OrderFragment extends Fragment {
         groupList.add(new Group("逢甲一起訂3", "0900-000-000", "逢甲大學", "9:00~10:00", "12:00", restaurantList, R.drawable.image));
         groupList.add(new Group("逢甲一起訂4", "0900-000-000", "逢甲大學", "9:00~10:00", "12:00", restaurantList, R.drawable.image));
 
-        RecyclerView recyclerView = view.findViewById(R.id.rv_order_restaurant_list);
+        RecyclerView recyclerView = view.findViewById(R.id.rv_order_group_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         OrderGroupListAdapter adapter = new OrderGroupListAdapter(getActivity(), groupList);
         recyclerView.setAdapter(adapter);

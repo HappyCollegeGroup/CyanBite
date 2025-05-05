@@ -1,14 +1,26 @@
 package fcu.app.cyanbite.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+
+import java.util.ArrayList;
+import java.util.List;
 
 import fcu.app.cyanbite.R;
+import fcu.app.cyanbite.adapter.OrderGroupListAdapter;
+import fcu.app.cyanbite.model.Food;
+import fcu.app.cyanbite.model.Group;
+import fcu.app.cyanbite.model.Restaurant;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,7 +72,48 @@ public class GroupFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_group, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_group, container, false);
+
+        Button btnShoppingCart = view.findViewById(R.id.btn_shopping_cart);
+        btnShoppingCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ShoppingCartActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        List<Food> foodList = new ArrayList<>();
+        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
+        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
+        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
+        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
+        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
+        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
+        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
+
+        List<Restaurant> restaurantList = new ArrayList<>();
+        restaurantList.add(new Restaurant("逢甲一起訂1", "0900-000-000", "逢甲大學", foodList, R.drawable.image));
+        restaurantList.add(new Restaurant("逢甲一起訂2", "0900-000-000", "逢甲大學", foodList, R.drawable.image));
+        restaurantList.add(new Restaurant("逢甲一起訂3", "0900-000-000", "逢甲大學", foodList, R.drawable.image));
+        restaurantList.add(new Restaurant("逢甲一起訂4", "0900-000-000", "逢甲大學", foodList, R.drawable.image));
+
+        List<Group> groupList = new ArrayList<>();
+        groupList.add(new Group("逢甲一起訂1", "0900-000-000", "逢甲大學", "9:00~10:00", "12:00", restaurantList, R.drawable.image));
+        groupList.add(new Group("逢甲一起訂2", "0900-000-000", "逢甲大學", "9:00~10:00", "12:00", restaurantList, R.drawable.image));
+        groupList.add(new Group("逢甲一起訂3", "0900-000-000", "逢甲大學", "9:00~10:00", "12:00", restaurantList, R.drawable.image));
+        groupList.add(new Group("逢甲一起訂4", "0900-000-000", "逢甲大學", "9:00~10:00", "12:00", restaurantList, R.drawable.image));
+
+        RecyclerView recyclerView = view.findViewById(R.id.rv_order_group_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        OrderGroupListAdapter adapter = new OrderGroupListAdapter(getActivity(), groupList);
+        recyclerView.setAdapter(adapter);
+
+
+        return view;
+
+
+
     }
 }
