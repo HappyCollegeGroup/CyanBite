@@ -10,11 +10,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.splashscreen.SplashScreen;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 import fcu.app.cyanbite.R;
 
@@ -22,15 +29,17 @@ public class LoginActivity extends AppCompatActivity {
     private TextView tvGoRegister;
     private EditText etAccount, etPassword;
     private Button btnLogin;
-    private SharedPreferences prefs;
+//    private SharedPreferences prefs;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
 
-        prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
-        auth();
+        FirebaseApp.initializeApp(this);
+        mAuth = FirebaseAuth.getInstance();
+//        prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
@@ -68,23 +77,21 @@ public class LoginActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
     }
 
-    private void auth() {
-        boolean isLogin = prefs.getBoolean("is_login", false);
-
-        if (isLogin) {
-            navigateTo(MainActivity.class);
-        }
-    }
-
     private void login(String account, String password) {
-        if ("CyanBite".equals(account) && "123".equals(password)) {
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean("is_login", true);
-            editor.apply();
+        mAuth.signInWithEmailAndPassword(account, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+//                            SharedPreferences.Editor editor = prefs.edit();
+//                            editor.putBoolean("is_login", true);
+//                            editor.apply();
 
-            navigateTo(MainActivity.class);
-        } else {
-            Toast.makeText(this, "帳號或密碼錯誤!", Toast.LENGTH_LONG).show();
-        }
+                            navigateTo(MainActivity.class);
+                        } else {
+                            Toast.makeText(LoginActivity.this, "登入失敗, " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
 }
