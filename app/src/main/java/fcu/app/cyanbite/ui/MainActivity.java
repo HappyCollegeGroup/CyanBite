@@ -1,6 +1,7 @@
 package fcu.app.cyanbite.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,10 +23,15 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import fcu.app.cyanbite.R;
 
 public class MainActivity extends AppCompatActivity {
+
+//    private SharedPreferences prefs;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +47,11 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+//        prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
         FirebaseApp.initializeApp(this);
+        mAuth = FirebaseAuth.getInstance();
+
+        auth();
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         Fragment orderFragment = OrderFragment.newInstance("", "");
@@ -73,5 +83,20 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.fragment_main, fragment)
                 .commit();
+    }
+
+    private void navigateTo(Class<?> cls) {
+        Intent intent = new Intent(MainActivity.this, cls);
+        startActivity(intent);
+        finish();
+        overridePendingTransition(0, 0);
+    }
+
+    private void auth() {
+//        boolean isLogin = prefs.getBoolean("is_login", false);
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) {
+            navigateTo(LoginActivity.class);
+        }
     }
 }

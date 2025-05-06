@@ -13,6 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import fcu.app.cyanbite.R;
 
 /**
@@ -67,26 +70,45 @@ public class AccountFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_account, container, false);
-        SharedPreferences prefs = getActivity().getSharedPreferences("user_prefs", MODE_PRIVATE);
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+//        SharedPreferences prefs = getActivity().getSharedPreferences("user_prefs", MODE_PRIVATE);
 
         ((Button)view.findViewById(R.id.btn_logout)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putBoolean("is_login", false);
-                editor.apply();
+//                SharedPreferences.Editor editor = prefs.edit();
+//                editor.putBoolean("is_login", false);
+//                editor.apply();
 
-                navigateTo(LoginActivity.class);
+                mAuth.signOut();;
+                navigateTo(LoginActivity.class, true);
+            }
+        });
+
+        ((Button)view.findViewById(R.id.btn_profile)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navigateTo(ProfileActivity.class, false);
+            }
+        });
+
+        ((Button)view.findViewById(R.id.btn_account)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navigateTo(AccountActivity.class, false);
             }
         });
 
         return view;
     }
 
-    private void navigateTo(Class<?> cls) {
+    private void navigateTo(Class<?> cls, boolean finish) {
         Intent intent = new Intent(getActivity(), cls);
         startActivity(intent);
-        getActivity().finish();
-        getActivity().overridePendingTransition(0, 0);
+
+        if (finish) {
+            getActivity().finish();
+            getActivity().overridePendingTransition(0, 0);
+        }
     }
 }
