@@ -42,71 +42,45 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/topAppBar" />
 
-        <TextView
-            android:id="@+id/textView13"
+        <Button
+            android:id="@+id/btn_profile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="48dp"
-            android:layout_marginEnd="32dp"
-            android:text="帳號"
-            app:layout_constraintEnd_toEndOf="@+id/topAppBar"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/topAppBar"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:background="@android:color/transparent"
+            android:text="個人檔案"
+            android:textAlignment="viewStart"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/topAppBar" />
 
-        <EditText
-            android:id="@+id/et_login_account4"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="text"
-            app:layout_constraintEnd_toEndOf="@id/textView13"
-            app:layout_constraintStart_toStartOf="@id/textView13"
-            app:layout_constraintTop_toBottomOf="@id/textView13" />
-
-        <TextView
-            android:id="@+id/textView14"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="密碼"
-            app:layout_constraintEnd_toEndOf="@id/et_login_account4"
-            app:layout_constraintStart_toStartOf="@id/et_login_account4"
-            app:layout_constraintTop_toBottomOf="@id/et_login_account4" />
-
-        <EditText
-            android:id="@+id/et_login_password4"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPassword"
-            app:layout_constraintEnd_toEndOf="@id/textView14"
-            app:layout_constraintStart_toStartOf="@id/textView14"
-            app:layout_constraintTop_toBottomOf="@id/textView14" />
-
         <Button
-            android:id="@+id/btn_login4"
-            style="@android:style/Widget.Button"
+            android:id="@+id/btn_account"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="修改密碼"
-            android:textColor="#fff"
-            app:layout_constraintEnd_toEndOf="@id/et_login_password4"
-            app:layout_constraintStart_toStartOf="@id/et_login_password4"
-            app:layout_constraintTop_toBottomOf="@id/et_login_password4" />
+            android:background="@android:color/transparent"
+            android:text="我的帳號"
+            android:textAlignment="viewStart"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="@+id/btn_profile"
+            app:layout_constraintStart_toStartOf="@+id/btn_profile"
+            app:layout_constraintTop_toBottomOf="@+id/btn_profile" />
 
         <Button
             android:id="@+id/btn_logout"
-            style="@style/AppTheme.Button.Danger"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:background="@android:color/transparent"
             android:text="登出"
-            app:layout_constraintEnd_toEndOf="@id/btn_login4"
+            android:textAlignment="viewStart"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="@+id/btn_account"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@id/btn_login4"
-            app:layout_constraintTop_toBottomOf="@id/btn_login4" />
+            app:layout_constraintStart_toStartOf="@+id/btn_account"
+            app:layout_constraintTop_toBottomOf="@+id/btn_account" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
