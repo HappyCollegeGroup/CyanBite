@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.FirebaseApp;
 
 import fcu.app.cyanbite.R;
 
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        FirebaseApp.initializeApp(this);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         Fragment orderFragment = OrderFragment.newInstance("", "");
