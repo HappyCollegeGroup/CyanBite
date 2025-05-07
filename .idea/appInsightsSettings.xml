@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="fcu.app.cyanbite" />
+                  <option name="mobileSdkAppId" value="1:960146220870:android:c4e969fe8d6c51169fa747" />
+                  <option name="projectId" value="cyanbite" />
+                  <option name="projectNumber" value="960146220870" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

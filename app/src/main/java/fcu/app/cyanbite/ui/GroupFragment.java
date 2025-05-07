@@ -17,10 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fcu.app.cyanbite.R;
-import fcu.app.cyanbite.adapter.OrderGroupListAdapter;
-import fcu.app.cyanbite.model.Food;
-import fcu.app.cyanbite.model.Group;
-import fcu.app.cyanbite.model.Restaurant;
+import fcu.app.cyanbite.adapter.OrderGroupNameListAdapter;
+import fcu.app.cyanbite.model.GroupName;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -84,30 +82,28 @@ public class GroupFragment extends Fragment {
             }
         });
 
-        List<Food> foodList = new ArrayList<>();
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
 
-        List<Restaurant> restaurantList = new ArrayList<>();
-        restaurantList.add(new Restaurant("逢甲一起訂1", "0900-000-000", "逢甲大學", foodList, R.drawable.image));
-        restaurantList.add(new Restaurant("逢甲一起訂2", "0900-000-000", "逢甲大學", foodList, R.drawable.image));
-        restaurantList.add(new Restaurant("逢甲一起訂3", "0900-000-000", "逢甲大學", foodList, R.drawable.image));
-        restaurantList.add(new Restaurant("逢甲一起訂4", "0900-000-000", "逢甲大學", foodList, R.drawable.image));
-
-        List<Group> groupList = new ArrayList<>();
-        groupList.add(new Group("逢甲一起訂1", "0900-000-000", "逢甲大學", "9:00~10:00", "12:00", restaurantList, R.drawable.image));
-        groupList.add(new Group("逢甲一起訂2", "0900-000-000", "逢甲大學", "9:00~10:00", "12:00", restaurantList, R.drawable.image));
-        groupList.add(new Group("逢甲一起訂3", "0900-000-000", "逢甲大學", "9:00~10:00", "12:00", restaurantList, R.drawable.image));
-        groupList.add(new Group("逢甲一起訂4", "0900-000-000", "逢甲大學", "9:00~10:00", "12:00", restaurantList, R.drawable.image));
+        List<GroupName> groupNameList = new ArrayList<>();
+        groupNameList.add(new GroupName("逢甲一起訂1"));
+        groupNameList.add(new GroupName("逢甲一起訂2"));
+        groupNameList.add(new GroupName("逢甲一起訂3"));
+        groupNameList.add(new GroupName("逢甲一起訂4"));
+        groupNameList.add(new GroupName("逢甲一起訂5"));
+        groupNameList.add(new GroupName("逢甲一起訂6"));
+        groupNameList.add(new GroupName("逢甲一起訂7"));
+        groupNameList.add(new GroupName("逢甲一起訂8"));
+        groupNameList.add(new GroupName("逢甲一起訂9"));
+        groupNameList.add(new GroupName("逢甲一起訂10"));
+        groupNameList.add(new GroupName("逢甲一起訂11"));
+        groupNameList.add(new GroupName("逢甲一起訂12"));
+        groupNameList.add(new GroupName("逢甲一起訂13"));
+        groupNameList.add(new GroupName("逢甲一起訂14"));
+        groupNameList.add(new GroupName("逢甲一起訂15"));
+        groupNameList.add(new GroupName("逢甲一起訂16"));
 
         RecyclerView recyclerView = view.findViewById(R.id.rv_order_group_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        OrderGroupListAdapter adapter = new OrderGroupListAdapter(getActivity(), groupList);
+        OrderGroupNameListAdapter adapter = new OrderGroupNameListAdapter(getActivity(), groupNameList);
         recyclerView.setAdapter(adapter);
 
 
