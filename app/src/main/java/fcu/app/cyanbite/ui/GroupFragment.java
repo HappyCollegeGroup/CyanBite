@@ -11,7 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +39,7 @@ public class GroupFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private Button  addNewGroup;
 
     public GroupFragment() {
         // Required empty public constructor
@@ -74,42 +79,45 @@ public class GroupFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_group, container, false);
 
         Button btnShoppingCart = view.findViewById(R.id.btn_shopping_cart);
-        btnShoppingCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ShoppingCartActivity.class);
-                startActivity(intent);
-            }
+        btnShoppingCart.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ShoppingCartActivity.class);
+            startActivity(intent);
         });
-
-
-        List<GroupName> groupNameList = new ArrayList<>();
-        groupNameList.add(new GroupName("逢甲一起訂1"));
-        groupNameList.add(new GroupName("逢甲一起訂2"));
-        groupNameList.add(new GroupName("逢甲一起訂3"));
-        groupNameList.add(new GroupName("逢甲一起訂4"));
-        groupNameList.add(new GroupName("逢甲一起訂5"));
-        groupNameList.add(new GroupName("逢甲一起訂6"));
-        groupNameList.add(new GroupName("逢甲一起訂7"));
-        groupNameList.add(new GroupName("逢甲一起訂8"));
-        groupNameList.add(new GroupName("逢甲一起訂9"));
-        groupNameList.add(new GroupName("逢甲一起訂10"));
-        groupNameList.add(new GroupName("逢甲一起訂11"));
-        groupNameList.add(new GroupName("逢甲一起訂12"));
-        groupNameList.add(new GroupName("逢甲一起訂13"));
-        groupNameList.add(new GroupName("逢甲一起訂14"));
-        groupNameList.add(new GroupName("逢甲一起訂15"));
-        groupNameList.add(new GroupName("逢甲一起訂16"));
 
         RecyclerView recyclerView = view.findViewById(R.id.rv_order_group_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        List<GroupName> groupNameList = new ArrayList<>();
         OrderGroupNameListAdapter adapter = new OrderGroupNameListAdapter(getActivity(), groupNameList);
         recyclerView.setAdapter(adapter);
 
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("groups")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    groupNameList.clear();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        String name = document.getString("name");
+                        if (name != null) {
+                            groupNameList.add(new GroupName(name));
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(getContext(), "團購資料載入成功", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "載入失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+
+        addNewGroup = view.findViewById(R.id.btn_add_new_group);
+        addNewGroup.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AddNewGroupActivity.class);
+            startActivity(intent);
+        });
+
         return view;
-
-
-
     }
+
+
+
 }
