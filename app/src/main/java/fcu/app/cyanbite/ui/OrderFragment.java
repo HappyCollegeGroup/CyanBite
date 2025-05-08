@@ -9,15 +9,27 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import fcu.app.cyanbite.R;
 import fcu.app.cyanbite.adapter.OrderGroupListAdapter;
@@ -40,6 +52,9 @@ public class OrderFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private FirebaseFirestore db;
+    private List<Group> groupList = new ArrayList<>();
+    private OrderGroupListAdapter adapter;
 
     public OrderFragment() {
         // Required empty public constructor
@@ -77,6 +92,8 @@ public class OrderFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_order, container, false);
 
+        db = FirebaseFirestore.getInstance();
+
         Button btnShoppingCart = view.findViewById(R.id.btn_shopping_cart);
         btnShoppingCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,33 +103,68 @@ public class OrderFragment extends Fragment {
             }
         });
 
-        List<Food> foodList = new ArrayList<>();
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
+        EditText etOrderSearch = view.findViewById(R.id.et_group_search);
+        etOrderSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-        List<Restaurant> restaurantList = new ArrayList<>();
-        restaurantList.add(new Restaurant("逢甲一起訂1", "0900-000-000", "逢甲大學", foodList, R.drawable.image));
-        restaurantList.add(new Restaurant("逢甲一起訂2", "0900-000-000", "逢甲大學", foodList, R.drawable.image));
-        restaurantList.add(new Restaurant("逢甲一起訂3", "0900-000-000", "逢甲大學", foodList, R.drawable.image));
-        restaurantList.add(new Restaurant("逢甲一起訂4", "0900-000-000", "逢甲大學", foodList, R.drawable.image));
+            }
 
-        List<Group> groupList = new ArrayList<>();
-        groupList.add(new Group("逢甲一起訂1", "0900-000-000", "逢甲大學", "9:00~10:00", "12:00", restaurantList, R.drawable.image));
-        groupList.add(new Group("逢甲一起訂2", "0900-000-000", "逢甲大學", "9:00~10:00", "12:00", restaurantList, R.drawable.image));
-        groupList.add(new Group("逢甲一起訂3", "0900-000-000", "逢甲大學", "9:00~10:00", "12:00", restaurantList, R.drawable.image));
-        groupList.add(new Group("逢甲一起訂4", "0900-000-000", "逢甲大學", "9:00~10:00", "12:00", restaurantList, R.drawable.image));
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                loadGroupData(etOrderSearch.getText().toString());
+            }
+        });
 
         RecyclerView recyclerView = view.findViewById(R.id.rv_order_group_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        OrderGroupListAdapter adapter = new OrderGroupListAdapter(getActivity(), groupList);
+        adapter = new OrderGroupListAdapter(getActivity(), groupList);
         recyclerView.setAdapter(adapter);
 
+        loadGroupData("");
+
         return view;
+    }
+
+    private void loadGroupData(String query) {
+        db.collection("group")
+                .whereArrayContains("searchKeywords", query)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    groupList.clear();
+
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        String name = doc.getString("name");
+//                        List<Restaurant> restaurantList = new ArrayList<>();
+//                        ArrayList<DocumentReference> restaurants = (ArrayList<DocumentReference>) doc.get("restaurant");
+//                        for (DocumentReference restaurant : restaurants) {
+//                            restaurant.get()
+//                                    .addOnSuccessListener(restaurantDoc -> {
+//                                        String restaurantName = restaurantDoc.getString("name");
+//                                        String restaurantPhone = restaurantDoc.getString("phone");
+//                                        String restaurantAddress = restaurantDoc.getString("address");
+//                                        List<Food> foodList = new ArrayList<>();
+//                                        ArrayList<Map<String, Object>> menu = (ArrayList<Map<String, Object>>) restaurantDoc.get("menu");
+//                                        for (Map<String, Object> food : menu) {
+//                                            foodList.add(new Food(
+//                                                    (String) food.get("name"),
+//                                                    (Long) food.get("price"),
+//                                                    (String) food.get("image")));
+//                                        }
+//                                        restaurantList.add(new Restaurant(restaurantName, restaurantPhone, restaurantAddress, foodList, -1));
+//                                        adapter.notifyDataSetChanged();
+//                                    });
+//                        }
+
+                        groupList.add(new Group(name, doc.getString("description"), "", "", "", "", null, doc.getString("image")));
+                        adapter.notifyDataSetChanged();
+                    }
+                });
     }
 
     @Override
