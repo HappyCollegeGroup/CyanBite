@@ -1,22 +1,21 @@
 package fcu.app.cyanbite.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import fcu.app.cyanbite.R;
-import fcu.app.cyanbite.model.Food;
 import fcu.app.cyanbite.model.Group;
-import fcu.app.cyanbite.model.Restaurant;
+import fcu.app.cyanbite.ui.OrderGroupActivity;
 
 public class OrderGroupListAdapter extends RecyclerView.Adapter<OrderGroupListAdapter.ViewHolder> {
     private Context context;
@@ -31,21 +30,24 @@ public class OrderGroupListAdapter extends RecyclerView.Adapter<OrderGroupListAd
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_restaurant, parent, false);
+                .inflate(R.layout.item_order_group, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Group group = groupList.get(position);
-        holder.tvGroupName.setText(group.getName());
-        holder.rvFoodList.setLayoutManager(new GridLayoutManager(context, 2));
-        List<Food> foodList = new ArrayList<>();
-        for (Restaurant restaurant : group.getRestaurantList()) {
-            foodList.addAll(restaurant.getFoodList());
-        }
-        OrderFoodListAdapter adapter = new OrderFoodListAdapter(context, foodList);
-        holder.rvFoodList.setAdapter(adapter);
+        holder.imgGroup.setImageBitmap(group.getImage());
+        holder.tvName.setText(group.getName());;
+        holder.tvDescription.setText(group.getDescription());;
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, OrderGroupActivity.class);
+                intent.putExtra("name", group.getName());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -54,13 +56,15 @@ public class OrderGroupListAdapter extends RecyclerView.Adapter<OrderGroupListAd
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvGroupName;
-        RecyclerView rvFoodList;
+        ImageView imgGroup;
+        TextView tvName;
+        TextView tvDescription;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvGroupName = itemView.findViewById(R.id.tv_order_rv_group_name);
-            rvFoodList = itemView.findViewById(R.id.rv_order_rv_food_list);
+            imgGroup = itemView.findViewById(R.id.img_group);
+            tvName = itemView.findViewById(R.id.tv_name);
+            tvDescription = itemView.findViewById(R.id.tv_description);
         }
     }
 }
