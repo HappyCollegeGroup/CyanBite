@@ -1,17 +1,24 @@
 package fcu.app.cyanbite.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -27,7 +34,8 @@ public class AddNewGroupActivity extends AppCompatActivity {
     private EditText etGroupOrderingTime;
     private EditText etGroupCollectionTime;
     private EditText etGroupRestaurant;
-    private Button addNewGroup;
+    private Button addNewGroupSubmit;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,15 +48,16 @@ public class AddNewGroupActivity extends AppCompatActivity {
             return insets;
         });
 
+
         etGroupName = findViewById(R.id.et_group_name);
         etGroupPhone = findViewById(R.id.etp_group_phone);
         etGroupLocation = findViewById(R.id.et_group_location);
         etGroupOrderingTime = findViewById(R.id.et_group_ordering_time);
         etGroupCollectionTime = findViewById(R.id.et_group_collection_time);
         etGroupRestaurant = findViewById(R.id.et_group_restaurant);
-        addNewGroup = findViewById(R.id.btn_submit_add_new_group);
+        addNewGroupSubmit = findViewById(R.id.btn_submit_add_new_group);
 
-        addNewGroup.setOnClickListener(new View.OnClickListener() {
+        addNewGroupSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String groupName = etGroupName.getText().toString().trim();
@@ -58,13 +67,13 @@ public class AddNewGroupActivity extends AppCompatActivity {
                 String collectionTime = etGroupCollectionTime.getText().toString().trim();
                 String restaurant = etGroupRestaurant.getText().toString().trim();
 
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+
                 if (groupName.isEmpty() || groupPhone.isEmpty() || groupLocation.isEmpty()
                         || orderingTime.isEmpty() || collectionTime.isEmpty() || restaurant.isEmpty()) {
                     Toast.makeText(AddNewGroupActivity.this, "請填寫所有欄位", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
 
                 Map<String, Object> group = new HashMap<>();
                 group.put("name", groupName);
@@ -74,14 +83,27 @@ public class AddNewGroupActivity extends AppCompatActivity {
                 group.put("collectionTime", collectionTime);
                 group.put("restaurant", restaurant);
 
+
                 db.collection("groups")
                         .add(group)
-                        .addOnSuccessListener(documentReference ->
-                                Toast.makeText(AddNewGroupActivity.this, "群組新增成功", Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(e ->
-                                Toast.makeText(AddNewGroupActivity.this, "新增失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show());
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Toast.makeText(AddNewGroupActivity.this, "新增團購成功", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(AddNewGroupActivity.this, GroupFragment.class);
+                                setResult(RESULT_OK);
+                                finish();
+                            }
+
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(AddNewGroupActivity.this, "新增失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
             }
         });
-
     }
+
 }

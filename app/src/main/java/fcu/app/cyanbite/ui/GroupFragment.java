@@ -1,8 +1,11 @@
 package fcu.app.cyanbite.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +17,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -40,6 +44,13 @@ public class GroupFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private Button  addNewGroup;
+    private FirebaseFirestore db;
+    private ActivityResultLauncher<Intent> addGroupLauncher;
+
+    private List<GroupName> groupNameList;
+    private OrderGroupNameListAdapter adapter;
+
+
 
     public GroupFragment() {
         // Required empty public constructor
@@ -66,16 +77,26 @@ public class GroupFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        addGroupLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        loadGroupData();
+                    }
+                }
+        );
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_group, container, false);
 
         Button btnShoppingCart = view.findViewById(R.id.btn_shopping_cart);
@@ -84,20 +105,33 @@ public class GroupFragment extends Fragment {
             startActivity(intent);
         });
 
+        db = FirebaseFirestore.getInstance();
+
         RecyclerView recyclerView = view.findViewById(R.id.rv_order_group_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        List<GroupName> groupNameList = new ArrayList<>();
-        OrderGroupNameListAdapter adapter = new OrderGroupNameListAdapter(getActivity(), groupNameList);
+
+        groupNameList = new ArrayList<>();
+        adapter = new OrderGroupNameListAdapter(getActivity(), groupNameList);
         recyclerView.setAdapter(adapter);
 
+        loadGroupData();
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        addNewGroup = view.findViewById(R.id.btn_add_new_group);
+        addNewGroup.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AddNewGroupActivity.class);
+            addGroupLauncher.launch(intent);
+        });
+
+        return view;
+    }
+
+    private void loadGroupData() {
         db.collection("groups")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     groupNameList.clear();
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        String name = document.getString("name");
+                    for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                        String name = doc.getString("name");
                         if (name != null) {
                             groupNameList.add(new GroupName(name));
                         }
@@ -105,19 +139,8 @@ public class GroupFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                     Toast.makeText(getContext(), "團購資料載入成功", Toast.LENGTH_SHORT).show();
                 })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "載入失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-
-        addNewGroup = view.findViewById(R.id.btn_add_new_group);
-        addNewGroup.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), AddNewGroupActivity.class);
-            startActivity(intent);
-        });
-
-        return view;
+                .addOnFailureListener(e ->
+                        Toast.makeText(getContext(), "載入失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
     }
-
-
-
 }
