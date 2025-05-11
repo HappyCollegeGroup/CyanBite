@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "960146220870",
+    "project_id": "cyanbite",
+    "storage_bucket": "cyanbite.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:960146220870:android:c4e969fe8d6c51169fa747",
+        "android_client_info": {
+          "package_name": "fcu.app.cyanbite"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWnf2nRc4JDZgd43Erv4UOGWQDIR8EtC8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
