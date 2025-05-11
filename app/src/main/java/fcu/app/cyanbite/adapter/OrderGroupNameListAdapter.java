@@ -34,6 +34,15 @@ public class OrderGroupNameListAdapter extends RecyclerView.Adapter<OrderGroupNa
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         GroupName groupName = groupNameList.get(position);
         holder.tvGroupName.setText(groupName.getGroupName());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listener != null) {
+                    listener.onItemClick(groupName);
+                }
+            }
+        });
     }
 
     @Override
@@ -49,4 +58,15 @@ public class OrderGroupNameListAdapter extends RecyclerView.Adapter<OrderGroupNa
             tvGroupName = itemView.findViewById(R.id.tv_order_rv_group_name);
         }
     }
+
+    public interface OnItemClickListener {
+        void onItemClick(GroupName group);
+    }
+
+    private OnItemClickListener listener;
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
 }

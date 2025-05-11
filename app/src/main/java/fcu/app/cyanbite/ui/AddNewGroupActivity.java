@@ -18,6 +18,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -67,7 +69,10 @@ public class AddNewGroupActivity extends AppCompatActivity {
                 String collectionTime = etGroupCollectionTime.getText().toString().trim();
                 String restaurant = etGroupRestaurant.getText().toString().trim();
 
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                String creatorId = currentUser.getUid();
 
                 if (groupName.isEmpty() || groupPhone.isEmpty() || groupLocation.isEmpty()
                         || orderingTime.isEmpty() || collectionTime.isEmpty() || restaurant.isEmpty()) {
@@ -82,6 +87,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
                 group.put("orderingTime", orderingTime);
                 group.put("collectionTime", collectionTime);
                 group.put("restaurant", restaurant);
+                group.put("creatorId", creatorId);
 
 
                 db.collection("groups")

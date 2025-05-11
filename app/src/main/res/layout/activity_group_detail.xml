@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+        <EditText
+            android:id="@+id/et_group_detail_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="團購名稱"
+            android:textSize="20sp"
+            android:inputType="textPersonName"
+            android:padding="8dp" />
+
+        <EditText
+            android:id="@+id/et_group_detail_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="電話"
+            android:textSize="18sp"
+            android:inputType="phone"
+            android:padding="8dp" />
+
+        <EditText
+            android:id="@+id/et_group_detail_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="地點"
+            android:textSize="18sp"
+            android:inputType="textPostalAddress"
+            android:padding="8dp" />
+
+        <EditText
+            android:id="@+id/et_group_detail_ordering_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="訂購時間"
+            android:textSize="18sp"
+            android:inputType="datetime"
+            android:padding="8dp" />
+
+        <EditText
+            android:id="@+id/et_group_detail_collection_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="取餐時間"
+            android:textSize="18sp"
+            android:inputType="datetime"
+            android:padding="8dp" />
+
+        <EditText
+            android:id="@+id/et_group_detail_restaurant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="餐廳"
+            android:textSize="18sp"
+            android:inputType="text"
+            android:padding="8dp" />
+
+        <Button
+            android:id="@+id/btn_save_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="儲存"
+            android:layout_marginTop="24dp"
+            android:padding="12dp"
+            android:textSize="18sp" />
+    </LinearLayout>
+</ScrollView>

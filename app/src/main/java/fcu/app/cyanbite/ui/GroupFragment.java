@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -43,13 +45,12 @@ public class GroupFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private Button  addNewGroup;
+    private Button addNewGroup;
     private FirebaseFirestore db;
     private ActivityResultLauncher<Intent> addGroupLauncher;
 
     private List<GroupName> groupNameList;
     private OrderGroupNameListAdapter adapter;
-
 
 
     public GroupFragment() {
@@ -126,7 +127,11 @@ public class GroupFragment extends Fragment {
     }
 
     private void loadGroupData() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String currentUserId = currentUser.getUid();
+
         db.collection("groups")
+                .whereEqualTo("creatorId", currentUserId)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     groupNameList.clear();
@@ -142,5 +147,42 @@ public class GroupFragment extends Fragment {
                 .addOnFailureListener(e ->
                         Toast.makeText(getContext(), "載入失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show()
                 );
+        adapter.setOnItemClickListener(new OrderGroupNameListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(GroupName group) {
+                String groupName = group.getGroupName();
+
+                db.collection("groups")
+                        .whereEqualTo("name", groupName)
+                        .limit(1)
+                        .get()
+                        .addOnSuccessListener(querySnapshot -> {
+                            if (!querySnapshot.isEmpty()) {
+                                DocumentSnapshot doc = querySnapshot.getDocuments().get(0);
+
+                                String phone = doc.getString("phone");
+                                String location = doc.getString("location");
+                                String orderingTime = doc.getString("orderingTime");
+                                String collectionTime = doc.getString("collectionTime");
+                                String restaurant = doc.getString("restaurant");
+
+                                Intent intent = new Intent(getActivity(), GroupDetailActivity.class);
+                                intent.putExtra("groupName", groupName);
+                                intent.putExtra("groupPhone", phone);
+                                intent.putExtra("groupLocation", location);
+                                intent.putExtra("orderingTime", orderingTime);
+                                intent.putExtra("collectionTime", collectionTime);
+                                intent.putExtra("restaurant", restaurant);
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(getContext(), "找不到群組資料", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(getContext(), "載入群組詳細資料失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
+            }
+        });
+
     }
 }
