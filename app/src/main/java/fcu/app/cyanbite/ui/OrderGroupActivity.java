@@ -1,7 +1,6 @@
 package fcu.app.cyanbite.ui;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -9,11 +8,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.DocumentReference;
@@ -26,13 +21,11 @@ import java.util.Map;
 
 import fcu.app.cyanbite.R;
 import fcu.app.cyanbite.adapter.OrderFoodListAdapter;
-import fcu.app.cyanbite.adapter.OrderGroupListAdapter;
 import fcu.app.cyanbite.model.Food;
 import fcu.app.cyanbite.model.Group;
 import fcu.app.cyanbite.model.Restaurant;
 
 public class OrderGroupActivity extends AppCompatActivity {
-
     private ImageView ivGroup;
     private TextView tvGroupName, tvOrderTime, tvPhone, tvCollectionTime, tvPlace;
     private Button btnReturn;
@@ -46,14 +39,9 @@ public class OrderGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_order_group);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         ivGroup = findViewById(R.id.iv_group);
-        tvGroupName = findViewById(R.id.tv_group_name);
+        tvGroupName = findViewById(R.id.tv_fragment_title);
         btnReturn = findViewById(R.id.btn_return);
         tvOrderTime = findViewById(R.id.tv_order_time);
         tvPhone = findViewById(R.id.tv_phone);

@@ -1,41 +1,36 @@
 package fcu.app.cyanbite.ui;
 
+import static android.view.View.VISIBLE;
+import static fcu.app.cyanbite.util.Util.open;
+import static fcu.app.cyanbite.util.Util.setStatusBar;
+
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.core.content.ContextCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+
+import com.google.android.material.search.SearchBar;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import fcu.app.cyanbite.R;
 import fcu.app.cyanbite.adapter.OrderGroupListAdapter;
-import fcu.app.cyanbite.model.Food;
 import fcu.app.cyanbite.model.Group;
-import fcu.app.cyanbite.model.Restaurant;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -52,9 +47,18 @@ public class OrderFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private Button btnShoppingCart;
+    private LinearLayout btnSelected, btnHot, btnDrink, btnFood;
+    private SearchBar etOrderSearch;
+    private RecyclerView rvSelected, rvHot, rvDrink, rvFood;
+    private OrderGroupListAdapter selectedAdapter, hotAdapter, drinkAdapter, foodAdapter;
+    private ScrollView svMain;
     private FirebaseFirestore db;
-    private List<Group> groupList = new ArrayList<>();
-    private OrderGroupListAdapter adapter;
+    private List<Group> selectedList = new ArrayList<>();
+    private List<Group> hotList = new ArrayList<>();
+    private List<Group> drinkList = new ArrayList<>();
+    private List<Group> foodList = new ArrayList<>();
 
     public OrderFragment() {
         // Required empty public constructor
@@ -88,94 +92,110 @@ public class OrderFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        setStatusBar(getActivity(), false);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_order, container, false);
 
-        db = FirebaseFirestore.getInstance();
-
-        Button btnShoppingCart = view.findViewById(R.id.btn_shopping_cart);
-        btnShoppingCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ShoppingCartActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        EditText etOrderSearch = view.findViewById(R.id.et_group_search);
-        etOrderSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                loadGroupData(etOrderSearch.getText().toString());
-            }
-        });
-
-        RecyclerView recyclerView = view.findViewById(R.id.rv_order_group_list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new OrderGroupListAdapter(getActivity(), groupList);
-        recyclerView.setAdapter(adapter);
-
-        loadGroupData("");
+        initFirebase();
+        initView(view);
+        setupListener();
+        setupRecyclerViews();
+        loadGroupData();
 
         return view;
     }
 
-    private void loadGroupData(String query) {
-        db.collection("group")
-                .whereArrayContains("searchKeywords", query)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    groupList.clear();
-
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        String name = doc.getString("name");
-//                        List<Restaurant> restaurantList = new ArrayList<>();
-//                        ArrayList<DocumentReference> restaurants = (ArrayList<DocumentReference>) doc.get("restaurant");
-//                        for (DocumentReference restaurant : restaurants) {
-//                            restaurant.get()
-//                                    .addOnSuccessListener(restaurantDoc -> {
-//                                        String restaurantName = restaurantDoc.getString("name");
-//                                        String restaurantPhone = restaurantDoc.getString("phone");
-//                                        String restaurantAddress = restaurantDoc.getString("address");
-//                                        List<Food> foodList = new ArrayList<>();
-//                                        ArrayList<Map<String, Object>> menu = (ArrayList<Map<String, Object>>) restaurantDoc.get("menu");
-//                                        for (Map<String, Object> food : menu) {
-//                                            foodList.add(new Food(
-//                                                    (String) food.get("name"),
-//                                                    (Long) food.get("price"),
-//                                                    (String) food.get("image")));
-//                                        }
-//                                        restaurantList.add(new Restaurant(restaurantName, restaurantPhone, restaurantAddress, foodList, -1));
-//                                        adapter.notifyDataSetChanged();
-//                                    });
-//                        }
-
-                        groupList.add(new Group(name, doc.getString("description"), "", "", "", "", null, doc.getString("image")));
-                        adapter.notifyDataSetChanged();
-                    }
-                });
+    private void initFirebase() {
+        db = FirebaseFirestore.getInstance();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    private void initView(View view) {
+        btnShoppingCart = view.findViewById(R.id.btn_shopping_cart);
+        btnSelected = view.findViewById(R.id.btn_selected);
+        btnHot = view.findViewById(R.id.btn_hot);
+        btnDrink = view.findViewById(R.id.btn_drink);
+        btnFood = view.findViewById(R.id.btn_food);
+        etOrderSearch = view.findViewById(R.id.et_search);
+        rvSelected = view.findViewById(R.id.rv_selected);
+        rvHot = view.findViewById(R.id.rv_hot);
+        rvDrink = view.findViewById(R.id.rv_drink);
+        rvFood = view.findViewById(R.id.rv_food);
+        svMain = view.findViewById(R.id.sv_main);
+    }
 
-        Window window = getActivity().getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.setStatusBarColor(ContextCompat.getColor(getActivity(), R.color.cyan));
-        WindowInsetsControllerCompat insetsController = new WindowInsetsControllerCompat(window, window.getDecorView());
-        insetsController.setAppearanceLightStatusBars(false);
+    private void setupListener() {
+        btnShoppingCart.setOnClickListener(view ->  {
+            open(getActivity(), ShoppingCartActivity.class);
+        });
+
+        btnFood.setOnClickListener(view -> {
+            svMain.post(() -> svMain.smoothScrollTo(0, rvFood.getTop() - 80));
+        });
+
+        btnDrink.setOnClickListener(view -> {
+            svMain.post(() -> svMain.smoothScrollTo(0, rvDrink.getTop() - 80));
+        });
+
+        btnHot.setOnClickListener(view -> {
+            svMain.post(() -> svMain.smoothScrollTo(0, rvHot.getTop() - 80));
+        });
+
+        btnSelected.setOnClickListener(view -> {
+            svMain.post(() -> svMain.smoothScrollTo(0, rvSelected.getTop() - 80));
+        });
+
+        etOrderSearch.setOnClickListener(view -> {
+            open(getActivity(), SearchActivity.class);
+        });
+    }
+
+    private void setupRecyclerViews() {
+        rvSelected.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        selectedAdapter = new OrderGroupListAdapter(getActivity(), selectedList, true);
+        rvSelected.setAdapter(selectedAdapter);
+
+        rvHot.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        hotAdapter = new OrderGroupListAdapter(getActivity(), hotList, true);
+        rvHot.setAdapter(hotAdapter);
+
+        rvDrink.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        drinkAdapter = new OrderGroupListAdapter(getActivity(), drinkList);
+        rvDrink.setAdapter(drinkAdapter);
+
+        rvFood.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        foodAdapter = new OrderGroupListAdapter(getActivity(), foodList);
+        rvFood.setAdapter(foodAdapter);
+    }
+
+    private void loadGroupData() {
+        findGroupData("selected", selectedList, selectedAdapter, 5);
+        findGroupData("hot", hotList, hotAdapter, 5);
+        findGroupData("drink", drinkList, drinkAdapter, 10);
+        findGroupData("food", foodList, foodAdapter, 10);
+    }
+
+    private void findGroupData(String tag, List<Group> list, OrderGroupListAdapter adapter, int limit) {
+        db.collection("group")
+                .whereArrayContains("tag", tag)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    list.clear();
+                    List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
+                    Collections.shuffle(docs);
+                    for (int i = 0; i < Math.min(limit, docs.size()); i++) {
+                        DocumentSnapshot doc = docs.get(i);
+                        String name = doc.getString("name");
+                        String description = doc.getString("description");
+                        String image = doc.getString("image");
+                        list.add(new Group(name, description, "", "", "", "", null, image));
+                    }
+                    adapter.notifyDataSetChanged();
+                });
     }
 }

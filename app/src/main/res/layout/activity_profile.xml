@@ -10,14 +10,15 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/topAppBar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="80dp"
         android:background="@color/white"
+        android:paddingTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/tv_group_name"
+            android:id="@+id/tv_fragment_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="個人檔案"
@@ -32,13 +33,25 @@
             style="@style/Widget.Material3.Button.IconButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:padding="0dp"
             app:icon="@drawable/arrow_back"
             app:iconTint="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/bottom_border2"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topAppBar" />
 
     <TextView
         android:id="@+id/textView2"
@@ -52,15 +65,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topAppBar" />
 
-    <EditText
-        android:id="@+id/et_account"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="4dp"
+        app:boxCornerRadiusBottomStart="4dp"
+        app:boxCornerRadiusTopEnd="4dp"
+        app:boxCornerRadiusTopStart="4dp"
         app:layout_constraintEnd_toEndOf="@+id/textView2"
         app:layout_constraintStart_toStartOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/textView6"
@@ -68,32 +91,29 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="電話"
-        app:layout_constraintEnd_toEndOf="@+id/et_account"
-        app:layout_constraintStart_toStartOf="@+id/et_account"
-        app:layout_constraintTop_toBottomOf="@+id/et_account" />
+        app:layout_constraintEnd_toEndOf="@+id/til_name"
+        app:layout_constraintStart_toStartOf="@+id/til_name"
+        app:layout_constraintTop_toBottomOf="@+id/til_name" />
 
-    <EditText
-        android:id="@+id/et_old_password"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_phone"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="phone"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="4dp"
+        app:boxCornerRadiusBottomStart="4dp"
+        app:boxCornerRadiusTopEnd="4dp"
+        app:boxCornerRadiusTopStart="4dp"
         app:layout_constraintEnd_toEndOf="@+id/textView6"
         app:layout_constraintStart_toStartOf="@+id/textView6"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintTop_toBottomOf="@+id/textView6">
 
-    <Button
-        android:id="@+id/btn_save"
-        style="@style/Widget.AppCompat.Button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="24dp"
-        android:text="儲存變更"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/textView8"
@@ -101,17 +121,46 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="地址"
-        app:layout_constraintEnd_toEndOf="@+id/et_old_password"
-        app:layout_constraintStart_toStartOf="@+id/et_old_password"
-        app:layout_constraintTop_toBottomOf="@+id/et_old_password" />
+        app:layout_constraintEnd_toEndOf="@+id/til_phone"
+        app:layout_constraintStart_toStartOf="@+id/til_phone"
+        app:layout_constraintTop_toBottomOf="@+id/til_phone" />
 
-    <EditText
-        android:id="@+id/et_address"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_address"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPostalAddress"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="4dp"
+        app:boxCornerRadiusBottomStart="4dp"
+        app:boxCornerRadiusTopEnd="4dp"
+        app:boxCornerRadiusTopStart="4dp"
         app:layout_constraintEnd_toEndOf="@+id/textView8"
         app:layout_constraintStart_toStartOf="@+id/textView8"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/textView8">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPostalAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_save"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:text="儲存變更"
+        android:textColor="@color/white"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        app:backgroundTint="@color/cyan"
+        app:cornerRadius="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

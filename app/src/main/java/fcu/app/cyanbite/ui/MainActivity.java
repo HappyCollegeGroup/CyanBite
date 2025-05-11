@@ -1,37 +1,24 @@
 package fcu.app.cyanbite.ui;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
+import static fcu.app.cyanbite.util.Util.navigateTo;
+
 import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
 import androidx.core.splashscreen.SplashScreen;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.FirebaseApp;
+
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import fcu.app.cyanbite.R;
 
 public class MainActivity extends AppCompatActivity {
-
-//    private SharedPreferences prefs;
     private FirebaseAuth mAuth;
+    private Fragment orderFragment, groupFragment, restaurantFragment, accountFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,41 +28,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
-//        prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        initFirebase();
+        checkIsLogin();
+        initBottomNavigationView();
+    }
+
+    private void initFirebase() {
         FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
-
-        auth();
-
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
-        Fragment orderFragment = OrderFragment.newInstance("", "");
-        Fragment groupFragment = GroupFragment.newInstance("", "");
-        Fragment restaurantFragment = RestaurantFragment.newInstance("", "");
-        Fragment accountFragment = AccountFragment.newInstance("", "");
-
-        setCurrentFragment(orderFragment);
-
-        bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if(item.getItemId() == R.id.menu_order) {
-                    setCurrentFragment(orderFragment);
-                } else if (item.getItemId() == R.id.menu_group) {
-                    setCurrentFragment(groupFragment);
-                } else if (item.getItemId() == R.id.menu_restaurant) {
-                    setCurrentFragment(restaurantFragment);
-                }  else if (item.getItemId() == R.id.menu_account) {
-                    setCurrentFragment(accountFragment);
-                }
-                return true;
-            }
-        });
     }
 
     private void setCurrentFragment(Fragment fragment) {
@@ -85,18 +46,32 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
-    private void navigateTo(Class<?> cls) {
-        Intent intent = new Intent(MainActivity.this, cls);
-        startActivity(intent);
-        finish();
-        overridePendingTransition(0, 0);
+    private void initBottomNavigationView() {
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
+        orderFragment = OrderFragment.newInstance("", "");
+        groupFragment = GroupFragment.newInstance("", "");
+        restaurantFragment = RestaurantFragment.newInstance("", "");
+        accountFragment = AccountFragment.newInstance("", "");
+
+        setCurrentFragment(orderFragment);
+
+        bottomNav.setOnItemSelectedListener(item ->  {
+            if(item.getItemId() == R.id.menu_order) {
+                setCurrentFragment(orderFragment);
+            } else if (item.getItemId() == R.id.menu_group) {
+                setCurrentFragment(groupFragment);
+            } else if (item.getItemId() == R.id.menu_restaurant) {
+                setCurrentFragment(restaurantFragment);
+            }  else if (item.getItemId() == R.id.menu_account) {
+                setCurrentFragment(accountFragment);
+            }
+            return true;
+        });
     }
 
-    private void auth() {
-//        boolean isLogin = prefs.getBoolean("is_login", false);
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user == null) {
-            navigateTo(LoginActivity.class);
+    private void checkIsLogin() {
+        if (mAuth.getCurrentUser() == null) {
+            navigateTo(this, LoginActivity.class);
         }
     }
 }

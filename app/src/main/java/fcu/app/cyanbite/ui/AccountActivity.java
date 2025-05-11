@@ -1,18 +1,16 @@
 package fcu.app.cyanbite.ui;
 
+import static fcu.app.cyanbite.util.Util.setStatusBar;
+import static fcu.app.cyanbite.util.Util.slideBack;
+
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,51 +30,69 @@ public class AccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_account);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
+        initFirebase();
+        initView();
+        setupListener();
+        showEditTextValue();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setStatusBar(this, true);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        slideBack(this);
+    }
+
+    private void initFirebase() {
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+    }
+
+    private void initView() {
         etAccount = findViewById(R.id.et_account);
         etOldPassword = findViewById(R.id.et_old_password);
         etNewPassword = findViewById(R.id.et_new_password);
         btnReturn = findViewById(R.id.btn_return);
         btnSave = findViewById(R.id.btn_save);
+    }
 
-        mAuth = FirebaseAuth.getInstance();
-        user = mAuth.getCurrentUser();
-
-        btnReturn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
+    private void setupListener() {
+        btnReturn.setOnClickListener(view ->  {
+            finish();
         });
 
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String oldPassword = etOldPassword.getText().toString();
-                String newPassword = etNewPassword.getText().toString();
+        btnSave.setOnClickListener(view ->  {
+            String oldPassword = etOldPassword.getText().toString();
+            String newPassword = etNewPassword.getText().toString();
 
-                AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), oldPassword);
+            AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), oldPassword);
                 user.reauthenticate(credential)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                user.updatePassword(newPassword)
-                                        .addOnSuccessListener(aVoid ->
-                                                Toast.makeText(AccountActivity.this, "修改成功", Toast.LENGTH_SHORT).show())
-                                        .addOnFailureListener(e ->
-                                                Toast.makeText(AccountActivity.this, "修改失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show());;
-                            }
-                        })
-                        .addOnFailureListener(e ->
-                                Toast.makeText(AccountActivity.this, "修改失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show());
-            }
+                    .addOnSuccessListener(task -> {
+                        user.updatePassword(newPassword)
+                                .addOnSuccessListener(aVoid -> {
+                                    showMessage(getString(R.string.save_success));
+                                })
+                                .addOnFailureListener(e -> {
+                                    showMessage(getString(R.string.save_fail) + ": " + e.getMessage());
+                                });
+                    })
+                    .addOnFailureListener(e -> {
+                        showMessage(getString(R.string.save_fail) + ": " + e.getMessage());
+                    });
         });
+    }
 
+    private void showMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    private void showEditTextValue() {
         etAccount.setText(user.getEmail());
     }
 }

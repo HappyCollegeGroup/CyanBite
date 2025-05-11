@@ -22,23 +22,34 @@
         android:id="@+id/textView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="128dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="24dp"
         android:text="帳號"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-    <EditText
-        android:id="@+id/et_login_account"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_account"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textEmailAddress"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="4dp"
+        app:boxCornerRadiusBottomStart="4dp"
+        app:boxCornerRadiusTopEnd="4dp"
+        app:boxCornerRadiusTopStart="4dp"
         app:layout_constraintEnd_toEndOf="@+id/textView"
         app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/textView">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <TextView
         android:id="@+id/textView3"
@@ -46,31 +57,47 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="密碼"
-        app:layout_constraintEnd_toEndOf="@+id/et_login_account"
-        app:layout_constraintStart_toStartOf="@+id/et_login_account"
-        app:layout_constraintTop_toBottomOf="@+id/et_login_account" />
+        app:layout_constraintEnd_toEndOf="@+id/til_account"
+        app:layout_constraintStart_toStartOf="@+id/til_account"
+        app:layout_constraintTop_toBottomOf="@+id/til_account" />
 
-    <EditText
-        android:id="@+id/et_login_password"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPassword"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="4dp"
+        app:boxCornerRadiusBottomStart="4dp"
+        app:boxCornerRadiusTopEnd="4dp"
+        app:boxCornerRadiusTopStart="4dp"
+        app:passwordToggleEnabled="true"
         app:layout_constraintEnd_toEndOf="@+id/textView3"
         app:layout_constraintStart_toStartOf="@+id/textView3"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/textView3">
 
-    <Button
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_login"
-        style="@android:style/Widget.Button"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="登入"
-        android:textColor="#fff"
-        app:layout_constraintEnd_toEndOf="@+id/et_login_password"
-        app:layout_constraintStart_toStartOf="@+id/et_login_password"
-        app:layout_constraintTop_toBottomOf="@+id/et_login_password" />
+        android:textColor="@color/white"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        app:backgroundTint="@color/cyan"
+        app:cornerRadius="4dp"
+        app:layout_constraintEnd_toEndOf="@+id/til_password"
+        app:layout_constraintStart_toStartOf="@+id/til_password"
+        app:layout_constraintTop_toBottomOf="@+id/til_password"
+        app:strokeColor="@color/cyan" />
 
     <LinearLayout
         android:layout_width="wrap_content"

@@ -1,9 +1,9 @@
 package fcu.app.cyanbite.ui;
 
-import static android.content.Context.MODE_PRIVATE;
+import static fcu.app.cyanbite.util.Util.navigateTo;
+import static fcu.app.cyanbite.util.Util.setStatusBar;
+import static fcu.app.cyanbite.util.Util.slideTo;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,10 +11,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import fcu.app.cyanbite.R;
 
@@ -33,6 +32,7 @@ public class AccountFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private LinearLayout btnProfile, btnAccount, btnLogout;
 
     public AccountFragment() {
         // Required empty public constructor
@@ -66,49 +66,42 @@ public class AccountFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        setStatusBar(getActivity(), true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_account, container, false);
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-//        SharedPreferences prefs = getActivity().getSharedPreferences("user_prefs", MODE_PRIVATE);
 
-        ((Button)view.findViewById(R.id.btn_logout)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                SharedPreferences.Editor editor = prefs.edit();
-//                editor.putBoolean("is_login", false);
-//                editor.apply();
-
-                mAuth.signOut();;
-                navigateTo(LoginActivity.class, true);
-            }
-        });
-
-        ((Button)view.findViewById(R.id.btn_profile)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navigateTo(ProfileActivity.class, false);
-            }
-        });
-
-        ((Button)view.findViewById(R.id.btn_account)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navigateTo(AccountActivity.class, false);
-            }
-        });
+        initView(view);
+        setupListener();
 
         return view;
     }
 
-    private void navigateTo(Class<?> cls, boolean finish) {
-        Intent intent = new Intent(getActivity(), cls);
-        startActivity(intent);
+    private void initView(View view) {
+        btnProfile = view.findViewById(R.id.btn_profile);
+        btnAccount = view.findViewById(R.id.btn_account);
+        btnLogout = view.findViewById(R.id.btn_logout);
+    }
 
-        if (finish) {
-            getActivity().finish();
-            getActivity().overridePendingTransition(0, 0);
-        }
+    private void setupListener() {
+        btnProfile.setOnClickListener(view ->  {
+            slideTo(getActivity(), ProfileActivity.class);
+        });
+
+        btnAccount.setOnClickListener(view ->  {
+            slideTo(getActivity(), AccountActivity.class);
+        });
+
+        btnLogout.setOnClickListener(view ->  {
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            mAuth.signOut();;
+            navigateTo(getActivity(), LoginActivity.class);
+        });
     }
 }

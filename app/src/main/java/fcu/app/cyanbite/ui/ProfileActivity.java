@@ -1,16 +1,15 @@
 package fcu.app.cyanbite.ui;
 
+import static fcu.app.cyanbite.util.Util.setStatusBar;
+import static fcu.app.cyanbite.util.Util.slideBack;
+
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,9 +22,12 @@ import java.util.Map;
 import fcu.app.cyanbite.R;
 
 public class ProfileActivity extends AppCompatActivity {
-
-    private Button btnReturn, btnSave;
+    public static final String COLLECTION_PROFILE = "profile";
+    public static final String FIELD_NAME = "name";
+    public static final String FIELD_PHONE = "phone";
+    public static final String FIELD_ADDRESS = "address";
     private EditText etName, etPhone, etAddress;
+    private Button btnReturn, btnSave;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private FirebaseFirestore db;
@@ -36,58 +38,79 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_profile);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
-        btnReturn = findViewById(R.id.btn_return);
-        btnSave = findViewById(R.id.btn_save);
-        etName = findViewById(R.id.et_account);
-        etPhone = findViewById(R.id.et_old_password);
-        etAddress = findViewById(R.id.et_address);
+        initFirebase();
+        initView();
+        setupListener();
+        showEditTextValue();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setStatusBar(this, true);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        slideBack(this);
+    }
+
+    private void initFirebase() {
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
         uid = user.getUid();
+    }
 
-        btnReturn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
+    private void initView() {
+        etName = findViewById(R.id.et_name);
+        etPhone = findViewById(R.id.et_phone);
+        etAddress = findViewById(R.id.et_address);
+        btnSave = findViewById(R.id.btn_save);
+        btnReturn = findViewById(R.id.btn_return);
+    }
+
+    private void setupListener() {
+        btnReturn.setOnClickListener(view -> {
+            finish();
         });
 
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String name = etName.getText().toString();
-                String phone = etPhone.getText().toString();
-                String address = etAddress.getText().toString();
+        btnSave.setOnClickListener(view -> {
+            btnSave.setEnabled(false);
 
-                Map<String, Object> profile = new HashMap<>();
-                profile.put("name", name);
-                profile.put("phone", phone);
-                profile.put("address", address);
+            String name = etName.getText().toString();
+            String phone = etPhone.getText().toString();
+            String address = etAddress.getText().toString();
 
-                db.collection("profile").document(uid)
-                        .set(profile, SetOptions.merge())
-                        .addOnSuccessListener(aVoid ->
-                                Toast.makeText(ProfileActivity.this, "儲存成功", Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(e ->
-                                Toast.makeText(ProfileActivity.this, "儲存失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show());
+            Map<String, Object> profile = new HashMap<>();
+            profile.put(FIELD_NAME, name);
+            profile.put(FIELD_PHONE, phone);
+            profile.put(FIELD_ADDRESS, address);
 
-            }
+            db.collection(COLLECTION_PROFILE).document(uid)
+                    .set(profile, SetOptions.merge())
+                    .addOnSuccessListener(aVoid -> {
+                        showMessage(getString(R.string.save_success));
+                    })
+                    .addOnFailureListener(e -> {
+                        showMessage(getString(R.string.save_fail) + ": " + e.getMessage());
+                    });
         });
+    }
 
-        db.collection("profile").document(uid)
+    private void showMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    private void showEditTextValue() {
+        db.collection(COLLECTION_PROFILE).document(uid)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
-                    etName.setText((String)querySnapshot.get("name"));
-                    etPhone.setText((String)querySnapshot.get("phone"));
-                    etAddress.setText((String)querySnapshot.get("address"));
+                    etName.setText((String)querySnapshot.get(FIELD_NAME));
+                    etPhone.setText((String)querySnapshot.get(FIELD_PHONE));
+                    etAddress.setText((String)querySnapshot.get(FIELD_ADDRESS));
                 });
     }
 }
