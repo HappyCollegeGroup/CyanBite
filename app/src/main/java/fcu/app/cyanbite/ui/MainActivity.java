@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_main, fragment)
+                .addToBackStack(null)
                 .commit();
     }
 

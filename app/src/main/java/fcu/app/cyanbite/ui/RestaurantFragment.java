@@ -7,13 +7,18 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import fcu.app.cyanbite.R;
 import fcu.app.cyanbite.adapter.RestaurantAdapter;
@@ -35,6 +40,8 @@ public class RestaurantFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private FirebaseFirestore db;
 
     public RestaurantFragment() {
         // Required empty public constructor
@@ -90,19 +97,8 @@ public class RestaurantFragment extends Fragment {
             }
         });
 
-        List<Food> foodList = new ArrayList<>();
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
-        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
-
         List<Restaurant> restaurantList = new ArrayList<>();
-        restaurantList.add(new Restaurant("逢甲一起訂1", "0900-000-000", "逢甲大學", foodList, R.drawable.image));
-        restaurantList.add(new Restaurant("逢甲一起訂2", "0900-000-000", "逢甲大學", foodList, R.drawable.image));
-        restaurantList.add(new Restaurant("逢甲一起訂3", "0900-000-000", "逢甲大學", foodList, R.drawable.image));
+        db = FirebaseFirestore.getInstance();
 
         // 綁定 RecyclerView
         RecyclerView recyclerView = view.findViewById(R.id.rv_restaurant_list);
@@ -116,6 +112,23 @@ public class RestaurantFragment extends Fragment {
             }
         });
         recyclerView.setAdapter(adapter);
+
+        db.collection("restaurant")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            String name = doc.getString("name");
+                            String image = doc.getString("image");
+                            String address = doc.getString("address");
+                            String phone = doc.getString("phone");
+                            List<Map<String, Object>> foodList = (List<Map<String, Object>>) doc.get("menu");
+//                            Log.d("abc", (String) foodList.get(0).get("price"));
+                            restaurantList.add(new Restaurant(name, phone, address, null, image));
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                });
 
         return view;
     }
