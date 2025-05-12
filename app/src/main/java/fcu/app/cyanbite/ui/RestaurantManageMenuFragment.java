@@ -1,14 +1,26 @@
 package fcu.app.cyanbite.ui;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import fcu.app.cyanbite.R;
+import fcu.app.cyanbite.adapter.RestaurantMenuListAdapter;
+import fcu.app.cyanbite.model.Food;
+import fcu.app.cyanbite.model.Restaurant;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,12 +31,18 @@ public class RestaurantManageMenuFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
+    private OnTabSwitchListener callback;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private RecyclerView recyclerView;
+    private RestaurantMenuListAdapter adapter;
+    private List<Food> foodList;
 
     public RestaurantManageMenuFragment() {
         // Required empty public constructor
@@ -39,6 +57,17 @@ public class RestaurantManageMenuFragment extends Fragment {
      * @return A new instance of fragment RestaurantManageMenuFragment.
      */
     // TODO: Rename and change types and number of parameters
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof OnTabSwitchListener) {
+            callback = (OnTabSwitchListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement OnTabSwitchListener");
+        }
+    }
+
     public static RestaurantManageMenuFragment newInstance(String param1, String param2) {
         RestaurantManageMenuFragment fragment = new RestaurantManageMenuFragment();
         Bundle args = new Bundle();
@@ -60,7 +89,44 @@ public class RestaurantManageMenuFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_restaurant_manage_menu, container, false);
+        View view = inflater.inflate(R.layout.fragment_restaurant_manage_menu, container, false);
+
+        // 從 arguments 取出 restaurant
+        Bundle args = getArguments();
+        Restaurant restaurant = null;
+        if (args != null) {
+            restaurant = (Restaurant) args.getSerializable("restaurant_data");
+        }
+
+        Button btnToInfo = view.findViewById(R.id.btn_back);
+        btnToInfo.setOnClickListener(v -> {
+            if (callback != null) {
+                callback.onSwitchToInfo();  // 通知 Activity 切換
+            }
+        });
+
+        Button btnToList = view.findViewById(R.id.btn_save);
+        btnToList.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.putExtra("navigate_to", "restaurant");
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+            requireActivity().finish();
+        });
+
+        recyclerView = view.findViewById(R.id.rv_manage_menu_list);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
+        // 改為使用 restaurant 中的 menu
+        if (restaurant != null && restaurant.getFoodList() != null) {
+            foodList = restaurant.getFoodList();
+        } else {
+            foodList = new ArrayList<>();  // 若為空則避免閃退
+        }
+
+        adapter = new RestaurantMenuListAdapter(requireContext(), foodList);
+        recyclerView.setAdapter(adapter);
+
+        return view;
     }
 }

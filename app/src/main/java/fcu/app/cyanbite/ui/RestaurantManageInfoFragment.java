@@ -1,14 +1,21 @@
 package fcu.app.cyanbite.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import fcu.app.cyanbite.R;
+import fcu.app.cyanbite.model.Restaurant;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +26,8 @@ public class RestaurantManageInfoFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
+    private OnTabSwitchListener callback;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -39,6 +48,17 @@ public class RestaurantManageInfoFragment extends Fragment {
      * @return A new instance of fragment RestaurantManageInfoFragment.
      */
     // TODO: Rename and change types and number of parameters
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof OnTabSwitchListener) {
+            callback = (OnTabSwitchListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement OnTabSwitchListener");
+        }
+    }
+
     public static RestaurantManageInfoFragment newInstance(String param1, String param2) {
         RestaurantManageInfoFragment fragment = new RestaurantManageInfoFragment();
         Bundle args = new Bundle();
@@ -60,7 +80,36 @@ public class RestaurantManageInfoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_restaurant_manage_info, container, false);
+        View view = inflater.inflate(R.layout.fragment_restaurant_manage_info, container, false);
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            Restaurant restaurant = (Restaurant) bundle.getSerializable("restaurant_data");
+
+            if (restaurant != null) {
+                // 2. 找元件
+                EditText etName = view.findViewById(R.id.et_name);
+                EditText etPhone = view.findViewById(R.id.et_phone);  // 看你命名但內容像電話
+                EditText etLocation = view.findViewById(R.id.et_location);
+                ImageButton imgButton = view.findViewById(R.id.img_btn_restaurant);
+
+                // 3. 設定元件值
+                etName.setText(restaurant.getName());
+                etPhone.setText(restaurant.getPhone());
+                etLocation.setText(restaurant.getLocation());
+                imgButton.setImageResource(restaurant.getImageResId());
+            }
+        } else {
+            Toast.makeText(getActivity(), "nothing happen", Toast.LENGTH_SHORT).show();
+        }
+
+        Button btnToInfo = view.findViewById(R.id.btn_next);
+        btnToInfo.setOnClickListener(v -> {
+            if (callback != null) {
+                callback.onSwitchToMenu();  // 通知 Activity 切換
+            }
+        });
+
+        return view;
     }
 }

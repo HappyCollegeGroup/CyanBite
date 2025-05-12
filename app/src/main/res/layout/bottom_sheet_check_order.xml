@@ -1,6 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="32dp">
+
+    <ImageView
+        android:id="@+id/iv_btm_sheet_food"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="75dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="75dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="h, 1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/image" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="30dp"
+        android:text="餐點名稱"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_btm_sheet_food" />
+
+    <TextView
+        android:id="@+id/tv_btm_sheet_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="雞腿"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/textView5"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="價格"
+        app:layout_constraintStart_toStartOf="@+id/tv_btm_sheet_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_btm_sheet_name" />
+
+    <TextView
+        android:id="@+id/tv_btm_sheet_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$ 150"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/textView7"
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+    <Button
+        android:id="@+id/btn_btm_sheet_delete"
+        style="@android:style/Widget.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
+        android:text="刪除"
+        android:textColor="#ffffff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_btm_sheet_price" />
+
+    <Button
+        android:id="@+id/btn_btm_sheet_cancel"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="關閉"
+        android:textColor="@color/cyan"
+        app:layout_constraintEnd_toStartOf="@+id/btn_btm_sheet_delete"
+        app:layout_constraintTop_toTopOf="@+id/btn_btm_sheet_delete" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

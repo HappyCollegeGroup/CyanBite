@@ -5,7 +5,9 @@ import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.widget.ImageView;
 
-public class Food {
+import java.io.Serializable;
+
+public class Food implements Serializable {
     private String name;
     private int price;
     private int imageResId;
@@ -31,7 +33,7 @@ public class Food {
         return price;
     }
 
-    public int getImage() {
+    public int getImageResId() {
         return imageResId;
     }
 
@@ -51,5 +53,17 @@ public class Food {
         }
 
         return bitmap;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public void setImageResId(int imageResId) {
+        this.imageResId = imageResId;
     }
 }

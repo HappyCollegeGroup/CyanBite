@@ -40,6 +40,12 @@
             android:name=".ui.AddNewGroupActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.RestaurantAddActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.RestaurantManageActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.MainActivity"
             android:exported="true"
             android:theme="@style/AppTheme.Launcher">
