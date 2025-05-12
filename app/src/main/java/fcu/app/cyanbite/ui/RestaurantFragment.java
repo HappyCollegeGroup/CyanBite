@@ -1,14 +1,24 @@
 package fcu.app.cyanbite.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import fcu.app.cyanbite.R;
+import fcu.app.cyanbite.adapter.RestaurantAdapter;
+import fcu.app.cyanbite.model.Food;
+import fcu.app.cyanbite.model.Restaurant;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,7 +70,53 @@ public class RestaurantFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_restaurant, container, false);
+        View view = inflater.inflate(R.layout.fragment_restaurant, container, false);
+
+        Button btnShoppingCart = view.findViewById(R.id.btn_shopping_cart);
+        btnShoppingCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ShoppingCartActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button btnAddRestaurant = view.findViewById(R.id.btn_next);
+        btnAddRestaurant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), RestaurantAddActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        List<Food> foodList = new ArrayList<>();
+        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
+        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
+        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
+        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
+        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
+        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
+        foodList.add(new Food("部隊鍋泡麵", 120, R.drawable.image));
+
+        List<Restaurant> restaurantList = new ArrayList<>();
+        restaurantList.add(new Restaurant("逢甲一起訂1", "0900-000-000", "逢甲大學", foodList, R.drawable.image));
+        restaurantList.add(new Restaurant("逢甲一起訂2", "0900-000-000", "逢甲大學", foodList, R.drawable.image));
+        restaurantList.add(new Restaurant("逢甲一起訂3", "0900-000-000", "逢甲大學", foodList, R.drawable.image));
+
+        // 綁定 RecyclerView
+        RecyclerView recyclerView = view.findViewById(R.id.rv_restaurant_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        RestaurantAdapter adapter = new RestaurantAdapter(restaurantList, new RestaurantAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Restaurant restaurant) {
+                Intent intent = new Intent(getActivity(), RestaurantManageActivity.class);
+                intent.putExtra("restaurant_data", restaurant);
+                startActivity(intent);
+            }
+        });
+        recyclerView.setAdapter(adapter);
+
+        return view;
     }
 }
