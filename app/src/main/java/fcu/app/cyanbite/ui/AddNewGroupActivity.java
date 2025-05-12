@@ -1,36 +1,23 @@
 package fcu.app.cyanbite.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import fcu.app.cyanbite.R;
+import fcu.app.cyanbite.ui.OnGroupSwitchListener;
 
-public class AddNewGroupActivity extends AppCompatActivity {
+public class AddNewGroupActivity extends AppCompatActivity implements OnGroupSwitchListener {
 
     private Button btnReturn;
     private EditText etGroupName;
@@ -39,7 +26,6 @@ public class AddNewGroupActivity extends AppCompatActivity {
     private EditText etGroupOrderingTime;
     private EditText etGroupCollectionTime;
     private EditText etGroupRestaurant;
-    private Button addNewGroupSubmit;
     private FirebaseFirestore db;
 
     @Override
@@ -54,78 +40,46 @@ public class AddNewGroupActivity extends AppCompatActivity {
         });
 
         btnReturn = findViewById(R.id.btn_return);
-
-
         etGroupName = findViewById(R.id.et_group_name);
         etGroupPhone = findViewById(R.id.et_group_phone);
         etGroupLocation = findViewById(R.id.et_group_location);
         etGroupOrderingTime = findViewById(R.id.et_group_ordering_time);
         etGroupCollectionTime = findViewById(R.id.et_group_collection_time);
         etGroupRestaurant = findViewById(R.id.et_group_restaurant);
-        addNewGroupSubmit = findViewById(R.id.btn_submit_add_new_group);
 
-        btnReturn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        btnReturn.setOnClickListener(v -> finish());
 
-        addNewGroupSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String groupName = etGroupName.getText().toString().trim();
-                String groupPhone = etGroupPhone.getText().toString().trim();
-                String groupLocation = etGroupLocation.getText().toString().trim();
-                String orderingTime = etGroupOrderingTime.getText().toString().trim();
-                String collectionTime = etGroupCollectionTime.getText().toString().trim();
-                String restaurantInput = etGroupRestaurant.getText().toString().trim();
-                List<String> restaurantList = new ArrayList<>();
-                for (String item : restaurantInput.split(",")) {
-                    restaurantList.add(item.trim());
-                }
-
-                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                String creatorId = currentUser.getUid();
-
-                if (groupName.isEmpty() || groupPhone.isEmpty() || groupLocation.isEmpty()
-                        || orderingTime.isEmpty() || collectionTime.isEmpty() || restaurantList.isEmpty()) {
-                    Toast.makeText(AddNewGroupActivity.this, "請填寫所有欄位", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                Map<String, Object> group = new HashMap<>();
-                group.put("name", groupName);
-                group.put("phone", groupPhone);
-                group.put("location", groupLocation);
-                group.put("orderingTime", orderingTime);
-                group.put("collectionTime", collectionTime);
-                group.put("restaurant", restaurantList);
-                group.put("creatorId", creatorId);
-
-
-                db.collection("groups")
-                        .add(group)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Toast.makeText(AddNewGroupActivity.this, "新增團購成功", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(AddNewGroupActivity.this, GroupFragment.class);
-                                setResult(RESULT_OK);
-                                finish();
-                            }
-
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(AddNewGroupActivity.this, "新增失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-            }
-        });
+        // 初次啟動載入 Info Fragment
+        if (savedInstanceState == null) {
+            AddNewGroupInfoFragment fragment = new AddNewGroupInfoFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragmentContainerView, fragment);
+            transaction.commit();
+        }
     }
 
+    @Override
+    public void onSwitchToGroupInfo() {
+        replaceFragment(new AddNewGroupInfoFragment());
+    }
+
+    @Override
+    public void onSwitchToGroupMenu() {
+        replaceFragment(new AddNewGroupRestaurantFragment());
+    }
+
+    @Override
+    public void onGroupTabSwitched(int index) {
+        if (index == 0) {
+            onSwitchToGroupInfo();
+        } else if (index == 1) {
+            onSwitchToGroupMenu();
+        }
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentContainerView, fragment);
+        transaction.commit();
+    }
 }
