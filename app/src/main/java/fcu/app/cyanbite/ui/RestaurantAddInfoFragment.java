@@ -1,12 +1,15 @@
 package fcu.app.cyanbite.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import fcu.app.cyanbite.R;
 
@@ -16,6 +19,8 @@ import fcu.app.cyanbite.R;
  * create an instance of this fragment.
  */
 public class RestaurantAddInfoFragment extends Fragment {
+
+    private OnTabSwitchListener callback;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -39,6 +44,17 @@ public class RestaurantAddInfoFragment extends Fragment {
      * @return A new instance of fragment RestaurantAddInfoFragment.
      */
     // TODO: Rename and change types and number of parameters
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof OnTabSwitchListener) {
+            callback = (OnTabSwitchListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement OnTabSwitchListener");
+        }
+    }
+
     public static RestaurantAddInfoFragment newInstance(String param1, String param2) {
         RestaurantAddInfoFragment fragment = new RestaurantAddInfoFragment();
         Bundle args = new Bundle();
@@ -61,6 +77,15 @@ public class RestaurantAddInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_restaurant_add_info, container, false);
+        View view = inflater.inflate(R.layout.fragment_restaurant_add_info, container, false);
+
+        Button btnToSecond = view.findViewById(R.id.btn_next);
+        btnToSecond.setOnClickListener(v -> {
+            if (callback != null) {
+                callback.onSwitchToMenu();  // 通知 Activity 切換
+            }
+        });
+
+        return view;
     }
 }
