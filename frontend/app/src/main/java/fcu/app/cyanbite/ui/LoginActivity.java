@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login(String account, String password) {
-        if ("CyanBite".equals(account) && "123".equals(password)) {
+        if ("Cyan".equals(account) && "123".equals(password)) {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean("is_login", true);
             editor.apply();

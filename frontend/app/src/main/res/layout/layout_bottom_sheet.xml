@@ -58,7 +58,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <Button
-        android:id="@+id/btn_btm_sheet_order"
+        android:id="@+id/btn_next"
         style="@android:style/Widget.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
         android:layout_marginEnd="16dp"
         android:text="關閉"
         android:textColor="@color/cyan"
-        app:layout_constraintEnd_toStartOf="@+id/btn_btm_sheet_order"
-        app:layout_constraintTop_toTopOf="@+id/btn_btm_sheet_order" />
+        app:layout_constraintEnd_toStartOf="@+id/btn_next"
+        app:layout_constraintTop_toTopOf="@+id/btn_next" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

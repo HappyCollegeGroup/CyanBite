@@ -81,8 +81,12 @@ public class OrderFragment extends Fragment {
         btnShoppingCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ShoppingCartActivity.class);
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent(getActivity(), ShoppingCartActivity.class);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace(); // 印出錯誤訊息觀察
+                }
             }
         });
 

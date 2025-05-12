@@ -46,7 +46,14 @@ public class MainActivity extends AppCompatActivity {
         Fragment restaurantFragment = RestaurantFragment.newInstance("", "");
         Fragment accountFragment = AccountFragment.newInstance("", "");
 
-        setCurrentFragment(orderFragment);
+        String target = getIntent().getStringExtra("navigate_to");
+        if (target != null && target.equals("restaurant")) {
+            setCurrentFragment(restaurantFragment);
+            // 同步設定 BottomNavigation 的選項，讓底部按鈕也跟著顯示正確選項
+            bottomNav.setSelectedItemId(R.id.menu_restaurant);
+        } else {
+            setCurrentFragment(orderFragment); // 預設 Fragment
+        }
 
         bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override

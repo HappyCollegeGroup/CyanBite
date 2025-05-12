@@ -1,8 +1,9 @@
 package fcu.app.cyanbite.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Restaurant {
+public class Restaurant implements Serializable {
     private String name;
     private String phone;
     private String location;
@@ -31,6 +32,10 @@ public class Restaurant {
 
     public List<Food> getFoodList() {
         return foodList;
+    }
+
+    public void setFoodList(List<Food> foodList) { // ← 加上這個
+        this.foodList = foodList;
     }
 
     public int getImageResId() {

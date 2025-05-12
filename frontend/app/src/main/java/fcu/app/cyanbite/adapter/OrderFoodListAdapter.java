@@ -56,7 +56,7 @@ public class OrderFoodListAdapter extends RecyclerView.Adapter<OrderFoodListAdap
                         bottomSheetDialog.cancel();
                     }
                 });
-                ((Button)dialog.findViewById(R.id.btn_btm_sheet_order)).setOnClickListener(new View.OnClickListener() {
+                ((Button)dialog.findViewById(R.id.btn_next)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         bottomSheetDialog.cancel();

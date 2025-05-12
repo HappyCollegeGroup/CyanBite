@@ -1,6 +1,8 @@
 package fcu.app.cyanbite.model;
 
-public class Food {
+import java.io.Serializable;
+
+public class Food  implements Serializable {
     private String name;
     private int price;
     private int imageResId;
@@ -22,4 +24,17 @@ public class Food {
     public int getImageResId() {
         return imageResId;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public void setImageResId(int imageResId) {
+        this.imageResId = imageResId;
+    }
+
 }
