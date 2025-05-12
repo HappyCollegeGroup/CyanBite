@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,6 +97,12 @@ public class GroupFragment extends Fragment {
 
 
     @Override
+    public void onResume() {
+        super.onResume();
+        loadGroupData();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_group, container, false);
@@ -115,7 +122,7 @@ public class GroupFragment extends Fragment {
         adapter = new OrderGroupNameListAdapter(getActivity(), groupNameList);
         recyclerView.setAdapter(adapter);
 
-        loadGroupData();
+
 
         addNewGroup = view.findViewById(R.id.btn_add_new_group);
         addNewGroup.setOnClickListener(v -> {
@@ -142,10 +149,11 @@ public class GroupFragment extends Fragment {
                         }
                     }
                     adapter.notifyDataSetChanged();
-                    Toast.makeText(getContext(), "團購資料載入成功", Toast.LENGTH_SHORT).show();
                 })
-                .addOnFailureListener(e ->
-                        Toast.makeText(getContext(), "載入失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show()
+                .addOnFailureListener(e ->{
+
+                        }
+
                 );
         adapter.setOnItemClickListener(new OrderGroupNameListAdapter.OnItemClickListener() {
             @Override
@@ -164,7 +172,7 @@ public class GroupFragment extends Fragment {
                                 String location = doc.getString("location");
                                 String orderingTime = doc.getString("orderingTime");
                                 String collectionTime = doc.getString("collectionTime");
-                                String restaurant = doc.getString("restaurant");
+                                List<String> restaurantList = (List<String>) doc.get("restaurant");
 
                                 Intent intent = new Intent(getActivity(), GroupDetailActivity.class);
                                 intent.putExtra("groupName", groupName);
@@ -172,14 +180,13 @@ public class GroupFragment extends Fragment {
                                 intent.putExtra("groupLocation", location);
                                 intent.putExtra("orderingTime", orderingTime);
                                 intent.putExtra("collectionTime", collectionTime);
-                                intent.putExtra("restaurant", restaurant);
+                                intent.putStringArrayListExtra("restaurant", new ArrayList<>(restaurantList));
                                 startActivity(intent);
+
                             } else {
-                                Toast.makeText(getContext(), "找不到群組資料", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .addOnFailureListener(e -> {
-                            Toast.makeText(getContext(), "載入群組詳細資料失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         });
             }
         });

@@ -23,13 +23,16 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import fcu.app.cyanbite.R;
 
 public class AddNewGroupActivity extends AppCompatActivity {
 
+    private Button btnReturn;
     private EditText etGroupName;
     private EditText etGroupPhone;
     private EditText etGroupLocation;
@@ -50,14 +53,23 @@ public class AddNewGroupActivity extends AppCompatActivity {
             return insets;
         });
 
+        btnReturn = findViewById(R.id.btn_return);
+
 
         etGroupName = findViewById(R.id.et_group_name);
-        etGroupPhone = findViewById(R.id.etp_group_phone);
+        etGroupPhone = findViewById(R.id.et_group_phone);
         etGroupLocation = findViewById(R.id.et_group_location);
         etGroupOrderingTime = findViewById(R.id.et_group_ordering_time);
         etGroupCollectionTime = findViewById(R.id.et_group_collection_time);
         etGroupRestaurant = findViewById(R.id.et_group_restaurant);
         addNewGroupSubmit = findViewById(R.id.btn_submit_add_new_group);
+
+        btnReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         addNewGroupSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +79,11 @@ public class AddNewGroupActivity extends AppCompatActivity {
                 String groupLocation = etGroupLocation.getText().toString().trim();
                 String orderingTime = etGroupOrderingTime.getText().toString().trim();
                 String collectionTime = etGroupCollectionTime.getText().toString().trim();
-                String restaurant = etGroupRestaurant.getText().toString().trim();
+                String restaurantInput = etGroupRestaurant.getText().toString().trim();
+                List<String> restaurantList = new ArrayList<>();
+                for (String item : restaurantInput.split(",")) {
+                    restaurantList.add(item.trim());
+                }
 
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -75,7 +91,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
                 String creatorId = currentUser.getUid();
 
                 if (groupName.isEmpty() || groupPhone.isEmpty() || groupLocation.isEmpty()
-                        || orderingTime.isEmpty() || collectionTime.isEmpty() || restaurant.isEmpty()) {
+                        || orderingTime.isEmpty() || collectionTime.isEmpty() || restaurantList.isEmpty()) {
                     Toast.makeText(AddNewGroupActivity.this, "請填寫所有欄位", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -86,7 +102,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
                 group.put("location", groupLocation);
                 group.put("orderingTime", orderingTime);
                 group.put("collectionTime", collectionTime);
-                group.put("restaurant", restaurant);
+                group.put("restaurant", restaurantList);
                 group.put("creatorId", creatorId);
 
 
