@@ -4,8 +4,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 
+import androidx.core.content.ContextCompat;
+
 import java.io.Serializable;
 import java.util.List;
+
+import fcu.app.cyanbite.R;
 
 public class Restaurant implements Serializable {
     private String name;

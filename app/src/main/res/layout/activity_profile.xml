@@ -142,6 +142,8 @@
             android:id="@+id/et_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="false"
+            android:clickable="true"
             android:inputType="textPostalAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -153,10 +155,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="24dp"
-        android:text="儲存變更"
-        android:textColor="@color/white"
         android:insetTop="0dp"
         android:insetBottom="0dp"
+        android:text="儲存變更"
+        android:textColor="@color/white"
         app:backgroundTint="@color/cyan"
         app:cornerRadius="4dp"
         app:layout_constraintBottom_toBottomOf="parent"

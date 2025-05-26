@@ -19,8 +19,11 @@ import android.widget.Button;
 
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.google.android.material.search.SearchBar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -48,6 +51,9 @@ public class OrderFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    public static final String COLLECTION_PROFILE = "profile";
+    public static final String FIELD_CITY = "city";
+    public static final String FIELD_DISTRICT = "district";
     private Button btnShoppingCart;
     private LinearLayout btnSelected, btnHot, btnDrink, btnFood;
     private SearchBar etOrderSearch;
@@ -55,6 +61,10 @@ public class OrderFragment extends Fragment {
     private OrderGroupListAdapter selectedAdapter, hotAdapter, drinkAdapter, foodAdapter;
     private ScrollView svMain;
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
+    private String uid;
+    private String city, district;
     private List<Group> selectedList = new ArrayList<>();
     private List<Group> hotList = new ArrayList<>();
     private List<Group> drinkList = new ArrayList<>();
@@ -106,12 +116,17 @@ public class OrderFragment extends Fragment {
         initView(view);
         setupListener();
         setupRecyclerViews();
-        loadGroupData();
+        loadProfile();
+//        loadGroupData();
 
         return view;
     }
 
     private void initFirebase() {
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+        uid = user.getUid();
         db = FirebaseFirestore.getInstance();
     }
 
@@ -183,10 +198,13 @@ public class OrderFragment extends Fragment {
     private void findGroupData(String tag, List<Group> list, OrderGroupListAdapter adapter, int limit) {
         db.collection("group")
                 .whereArrayContains("tag", tag)
+                .whereEqualTo("city", city)
+                .whereEqualTo("district", district)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     list.clear();
                     List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
+
                     Collections.shuffle(docs);
                     for (int i = 0; i < Math.min(limit, docs.size()); i++) {
                         DocumentSnapshot doc = docs.get(i);
@@ -196,6 +214,17 @@ public class OrderFragment extends Fragment {
                         list.add(new Group(name, description, "", "", "", "", null, image));
                     }
                     adapter.notifyDataSetChanged();
+                });
+    }
+
+    private void loadProfile() {
+        db.collection(COLLECTION_PROFILE).document(uid)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    city = (String)querySnapshot.get(FIELD_CITY);
+                    district = (String)querySnapshot.get(FIELD_DISTRICT);
+
+                    loadGroupData();
                 });
     }
 }

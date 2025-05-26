@@ -3,12 +3,17 @@ package fcu.app.cyanbite.ui;
 import static fcu.app.cyanbite.util.Util.setStatusBar;
 import static fcu.app.cyanbite.util.Util.slideBack;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.PhoneNumberUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,12 +31,17 @@ public class ProfileActivity extends AppCompatActivity {
     public static final String FIELD_NAME = "name";
     public static final String FIELD_PHONE = "phone";
     public static final String FIELD_ADDRESS = "address";
+    public static final String FIELD_CITY = "city";
+    public static final String FIELD_DISTRICT = "district";
+//    public static final String FIELD_ROAD = "road";
+//    public static final String FIELD_NUMBER = "number";
     private EditText etName, etPhone, etAddress;
     private Button btnReturn, btnSave;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private FirebaseFirestore db;
     private String uid;
+    private String address, city, district, road, number;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +82,25 @@ public class ProfileActivity extends AppCompatActivity {
         btnReturn = findViewById(R.id.btn_return);
     }
 
+    private final ActivityResultLauncher<Intent> activityResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    address = result.getData().getStringExtra("address");
+                    city = result.getData().getStringExtra("city");
+                    district = result.getData().getStringExtra("district");
+                    road = result.getData().getStringExtra("road");
+                    number = result.getData().getStringExtra("number");
+                    etAddress.setText(address);
+                }
+            });
+
     private void setupListener() {
+        etAddress.setOnClickListener(view -> {
+            Intent intent = new Intent(this, PlaceSelectionActivity.class);
+            intent.putExtra("initial_address", String.valueOf(etAddress.getText()));
+            activityResultLauncher.launch(intent);
+        });
+
         btnReturn.setOnClickListener(view -> {
             finish();
         });
@@ -80,23 +108,36 @@ public class ProfileActivity extends AppCompatActivity {
         btnSave.setOnClickListener(view -> {
             btnSave.setEnabled(false);
 
-            String name = etName.getText().toString();
-            String phone = etPhone.getText().toString();
-            String address = etAddress.getText().toString();
+            String name = etName.getText().toString().trim();
+            String phone = etPhone.getText().toString().trim();
+            String address = etAddress.getText().toString().trim();
 
-            Map<String, Object> profile = new HashMap<>();
-            profile.put(FIELD_NAME, name);
-            profile.put(FIELD_PHONE, phone);
-            profile.put(FIELD_ADDRESS, address);
+            if (name.isEmpty() || phone.isEmpty() || address.isEmpty()) {
+                showMessage("請輸入所有欄位!");
+            } else if (!PhoneNumberUtils.isGlobalPhoneNumber(phone)) {
+                showMessage("請輸入合法的電話號碼!");
+            } else {
+                Map<String, Object> profile = new HashMap<>();
+                profile.put(FIELD_NAME, name);
+                profile.put(FIELD_PHONE, phone);
+                profile.put(FIELD_ADDRESS, address);
+                profile.put(FIELD_CITY, city);
+                profile.put(FIELD_DISTRICT, district);
+//                profile.put(FIELD_ROAD, road);
+//                profile.put(FIELD_NUMBER, number);
 
-            db.collection(COLLECTION_PROFILE).document(uid)
-                    .set(profile, SetOptions.merge())
-                    .addOnSuccessListener(aVoid -> {
-                        showMessage(getString(R.string.save_success));
-                    })
-                    .addOnFailureListener(e -> {
-                        showMessage(getString(R.string.save_fail) + ": " + e.getMessage());
-                    });
+                db.collection(COLLECTION_PROFILE).document(uid)
+                        .set(profile, SetOptions.merge())
+                        .addOnSuccessListener(aVoid -> {
+                            showMessage(getString(R.string.save_success));
+                        })
+                        .addOnFailureListener(e -> {
+                            showMessage(getString(R.string.save_fail) + ": " + e.getMessage());
+                        })
+                        .addOnCompleteListener(e -> {
+                            btnSave.setEnabled(true);
+                        });
+            }
         });
     }
 
