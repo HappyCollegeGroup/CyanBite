@@ -61,7 +61,7 @@ public class RestaurantMenuListAdapter extends RecyclerView.Adapter {
             ViewHolder vh = (ViewHolder) holder;
             vh.tvName.setText(food.getName());
             vh.tvPrice.setText("$ " + food.getPrice());
-            vh.imgFood.setImageResource(food.getImageResId());
+            vh.imgFood.setImageBitmap(food.getImageBitmap());
 
             holder.itemView.setOnClickListener(view -> {
                 showBottomSheet(food); // 傳入資料做編輯

@@ -122,9 +122,18 @@ public class RestaurantFragment extends Fragment {
                             String image = doc.getString("image");
                             String address = doc.getString("address");
                             String phone = doc.getString("phone");
-                            List<Map<String, Object>> foodList = (List<Map<String, Object>>) doc.get("menu");
-//                            Log.d("abc", (String) foodList.get(0).get("price"));
-                            restaurantList.add(new Restaurant(name, phone, address, null, image));
+                            List<Map<String, Object>> DocFoodList = (List<Map<String, Object>>) doc.get("menu");
+                            List<Food> foodList = new ArrayList<>();
+
+                            for (Map<String, Object> foodMap : DocFoodList) {
+                                String foodname = (String) foodMap.get("name");
+                                Long foodprice = (Long) foodMap.get("price"); // Firestore 整數預設為 Long
+                                String foodimage = (String) foodMap.get("image");
+
+                                Food food = new Food(foodname, foodprice, foodimage);
+                                foodList.add(food);
+                            }
+                            restaurantList.add(new Restaurant(name, phone, address, foodList, image));
                         }
                         adapter.notifyDataSetChanged();
                     }
