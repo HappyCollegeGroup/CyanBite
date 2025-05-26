@@ -1,5 +1,6 @@
 package fcu.app.cyanbite.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,7 +10,10 @@ import android.widget.EditText;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 import fcu.app.cyanbite.R;
+import fcu.app.cyanbite.adapter.RestaurantAdapter;
+import fcu.app.cyanbite.model.Restaurant;
 
 public class AddNewGroupRestaurantFragment extends Fragment {
 
@@ -30,22 +36,36 @@ public class AddNewGroupRestaurantFragment extends Fragment {
     private String groupLocation;
     private String orderingTime;
     private String collectionTime;
+    private OnGroupSwitchListener callback;
+    private FirebaseFirestore db;
+    private Bundle prev;
+    private String selectedRestaurantName;
+
+
 
     public AddNewGroupRestaurantFragment() {
         // Required empty public constructor
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof OnGroupSwitchListener) {
+            callback = (OnGroupSwitchListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement OnGroupSwitchListener");
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            groupName = getArguments().getString("groupName");
-            groupPhone = getArguments().getString("groupPhone");
-            groupLocation = getArguments().getString("groupLocation");
-            orderingTime = getArguments().getString("orderingTime");
-            collectionTime = getArguments().getString("collectionTime");
-        }
+
+    }
+
+    public void addArgument(Bundle bundle){
+        prev = bundle;
     }
 
     @Override
@@ -53,9 +73,34 @@ public class AddNewGroupRestaurantFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_new_group_restaurant, container, false);
 
+        db = FirebaseFirestore.getInstance();
+
         etRestaurantName = view.findViewById(R.id.et_group_restaurant);
 
         Button btnSubmitRestaurant = view.findViewById(R.id.btn_submit_add_new_group);
+        Button btnBack = view.findViewById(R.id.btn_back);
+
+        List<Restaurant> qrestaurantList = new ArrayList<>();
+        qrestaurantList.add(new Restaurant("逢甲一起訂1", "0900-000-000", "逢甲大學", null, R.drawable.image));
+        qrestaurantList.add(new Restaurant("逢甲一起訂2", "0900-000-000", "逢甲大學", null, R.drawable.image));
+        qrestaurantList.add(new Restaurant("逢甲一起訂3", "0900-000-000", "逢甲大學", null, R.drawable.image));
+
+
+        RecyclerView rvRestaurantList = view.findViewById(R.id.rv_restaurant_list);
+        rvRestaurantList.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+
+        RestaurantAdapter adapter = new RestaurantAdapter( qrestaurantList, new RestaurantAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Restaurant restaurant) {
+                Intent intent = new Intent(getActivity(), RestaurantShowActivity.class);
+                intent.putExtra("restaurant_data", restaurant);
+                startActivity(intent);
+            }
+
+        });
+        rvRestaurantList.setAdapter(adapter);
+
         btnSubmitRestaurant.setOnClickListener(v -> {
             String restaurantNames = etRestaurantName.getText().toString().trim();
 
@@ -78,6 +123,12 @@ public class AddNewGroupRestaurantFragment extends Fragment {
                     ? FirebaseAuth.getInstance().getCurrentUser().getUid()
                     : "unknown";
 
+            groupName = prev.getString("groupName");
+            groupPhone = prev.getString("groupPhone");
+            groupLocation = prev.getString("groupLocation");
+            orderingTime = prev.getString("orderingTime");
+            collectionTime = prev.getString("collectionTime");
+
             Map<String, Object> group = new HashMap<>();
             group.put("name", groupName);
             group.put("phone", groupPhone);
@@ -96,6 +147,13 @@ public class AddNewGroupRestaurantFragment extends Fragment {
                     .addOnFailureListener(e -> {
                         Toast.makeText(getActivity(), "提交失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
+
+        });
+
+        btnBack.setOnClickListener(v -> {
+            if (callback != null) {
+                callback.onSwitchToGroupInfo();
+            }
         });
 
         return view;

@@ -43,12 +43,36 @@
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_restaurant_list"
+                android:layout_width="308dp"
+                android:layout_height="332dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout8" />
+
             <Button
                 android:id="@+id/btn_submit_add_new_group"
+                style="@android:style/Widget.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="新增團購"
-                android:layout_marginTop="24dp" />
+                android:layout_marginTop="24dp"
+                android:textColor="@color/white" />
+
+
+            <Button
+                android:id="@+id/btn_back"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="上一步"
+                android:textColor="@color/cyan" />
         </LinearLayout>
     </ScrollView>
 
