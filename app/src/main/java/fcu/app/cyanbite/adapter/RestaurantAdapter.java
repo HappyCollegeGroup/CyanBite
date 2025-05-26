@@ -3,6 +3,7 @@ package fcu.app.cyanbite.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,14 +30,17 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
+        ImageView imgRestaurant;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            nameTextView = itemView.findViewById(R.id.tv_order_rv_group_name);
+            nameTextView = itemView.findViewById(R.id.tv_name);
+            imgRestaurant = itemView.findViewById(R.id.img_restaurant);
         }
 
         public void bind(Restaurant restaurant, OnItemClickListener listener) {
             nameTextView.setText(restaurant.getName());
+            imgRestaurant.setImageBitmap(restaurant.getImageBitmap());
             itemView.setOnClickListener(v -> listener.onItemClick(restaurant));
         }
     }

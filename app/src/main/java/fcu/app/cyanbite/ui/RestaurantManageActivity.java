@@ -30,7 +30,6 @@ public class RestaurantManageActivity extends AppCompatActivity  implements OnTa
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_manage_restaurant, menufragment)
-                    .addToBackStack(null)
                     .commit();
             updateStyle(false);
         }
@@ -45,7 +44,6 @@ public class RestaurantManageActivity extends AppCompatActivity  implements OnTa
             infoFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_manage_restaurant, infoFragment)
-                    .addToBackStack(null)
                     .commit();
             updateStyle(true);
         }
@@ -102,7 +100,6 @@ public class RestaurantManageActivity extends AppCompatActivity  implements OnTa
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_manage_restaurant, infoFragment)
-                        .addToBackStack(null)
                         .commit();
             }
         }

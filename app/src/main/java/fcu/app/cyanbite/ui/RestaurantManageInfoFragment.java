@@ -89,7 +89,7 @@ public class RestaurantManageInfoFragment extends Fragment {
             if (restaurant != null) {
                 // 2. 找元件
                 EditText etName = view.findViewById(R.id.et_name);
-                EditText etPhone = view.findViewById(R.id.et_phone);  // 看你命名但內容像電話
+                EditText etPhone = view.findViewById(R.id.et_phone);
                 EditText etLocation = view.findViewById(R.id.et_location);
                 ImageButton imgButton = view.findViewById(R.id.img_btn_restaurant);
 
@@ -97,7 +97,7 @@ public class RestaurantManageInfoFragment extends Fragment {
                 etName.setText(restaurant.getName());
                 etPhone.setText(restaurant.getPhone());
                 etLocation.setText(restaurant.getLocation());
-                imgButton.setImageResource(restaurant.getImageResId());
+                imgButton.setImageBitmap(restaurant.getImageBitmap());
             }
         } else {
             Toast.makeText(getActivity(), "nothing happen", Toast.LENGTH_SHORT).show();
