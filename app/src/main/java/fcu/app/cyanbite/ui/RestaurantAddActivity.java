@@ -12,13 +12,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import fcu.app.cyanbite.R;
+import fcu.app.cyanbite.model.Restaurant;
 
 public class RestaurantAddActivity extends AppCompatActivity implements OnTabSwitchListener  {
 
     private TextView tvInfoNumber, tvInfo, tvMenuNumber, tvMenu;
 
     @Override
-    public void onSwitchToMenu() {
+    public void onSwitchToMenu(Restaurant restaurant) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_add_restaurant, new RestaurantAddMenuFragment())
                 .commit();

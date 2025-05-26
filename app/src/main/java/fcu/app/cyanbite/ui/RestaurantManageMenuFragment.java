@@ -13,9 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
+
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import fcu.app.cyanbite.R;
 import fcu.app.cyanbite.adapter.RestaurantMenuListAdapter;
@@ -43,6 +48,7 @@ public class RestaurantManageMenuFragment extends Fragment {
     private RecyclerView recyclerView;
     private RestaurantMenuListAdapter adapter;
     private List<Food> foodList;
+    Restaurant restaurant;
 
     public RestaurantManageMenuFragment() {
         // Required empty public constructor
@@ -93,7 +99,6 @@ public class RestaurantManageMenuFragment extends Fragment {
 
         // 從 arguments 取出 restaurant
         Bundle args = getArguments();
-        Restaurant restaurant = null;
         if (args != null) {
             restaurant = (Restaurant) args.getSerializable("restaurant_data");
         }
@@ -107,11 +112,55 @@ public class RestaurantManageMenuFragment extends Fragment {
 
         Button btnToList = view.findViewById(R.id.btn_save);
         btnToList.setOnClickListener(v -> {
+//            if (foodList != null && !foodList.isEmpty()) {
+//                StringBuilder sb = new StringBuilder("Food List: ");
+//                for (Food food : foodList) {
+//                    sb.append("- ").append(food.getName()); // 假設 Food 有 getName()
+//                }
+//                Toast.makeText(getContext(), sb.toString(), Toast.LENGTH_LONG).show();
+//            } else {
+//                Toast.makeText(getContext(), "Food list is empty!", Toast.LENGTH_SHORT).show();
+//            }
+            restaurant.setFoodList(foodList);
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            // 要更新的餐廳 document ID
+            String id = restaurant.getId();
+
+            // 將 foodList 轉為 List<Map<String, Object>> 格式
+            List<Map<String, Object>> foodMapList = new ArrayList<>();
+            for (Food food : restaurant.getFoodList()) {
+                Map<String, Object> foodMap = new HashMap<>();
+                foodMap.put("name", food.getName());
+                foodMap.put("price", food.getPrice());
+                foodMap.put("image", food.getImage());
+                foodMapList.add(foodMap);
+            }
+
+            // 建立要更新的內容
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("menu", foodMapList);
+            updates.put("name", restaurant.getName());
+            updates.put("phone", restaurant.getPhone());
+            updates.put("address", restaurant.getLocation());
+//            updates.put("image", restaurant.getImageBitmap());
+
+            // 執行更新
+            db.collection("restaurant")
+                    .document(id)
+                    .update(updates)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(getContext(), "更新成功", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(getContext(), "更新失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+
+
             Intent intent = new Intent(getActivity(), MainActivity.class);
-            intent.putExtra("navigate_to", "restaurant");
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
-            requireActivity().finish();
+            getActivity().finish();
         });
 
         recyclerView = view.findViewById(R.id.rv_manage_menu_list);

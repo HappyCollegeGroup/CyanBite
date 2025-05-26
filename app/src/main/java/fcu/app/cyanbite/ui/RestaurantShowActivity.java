@@ -19,7 +19,7 @@ public class RestaurantShowActivity extends AppCompatActivity implements OnTabSw
     private TextView tvInfoNumber, tvInfo, tvMenuNumber, tvMenu;
     private Restaurant restaurant;
     @Override
-    public void onSwitchToMenu() {
+    public void onSwitchToMenu(Restaurant restaurants) {
         if (restaurant != null) {
             RestaurantShowMenuFragment showmenufragment = new RestaurantShowMenuFragment();
 

@@ -118,6 +118,7 @@ public class RestaurantFragment extends Fragment {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot doc : task.getResult()) {
+                            String id = doc.getId();
                             String name = doc.getString("name");
                             String image = doc.getString("image");
                             String address = doc.getString("address");
@@ -133,7 +134,7 @@ public class RestaurantFragment extends Fragment {
                                 Food food = new Food(foodname, foodprice, foodimage);
                                 foodList.add(food);
                             }
-                            restaurantList.add(new Restaurant(name, phone, address, foodList, image));
+                            restaurantList.add(new Restaurant(id, name, phone, address, foodList, image));
                         }
                         adapter.notifyDataSetChanged();
                     }

@@ -20,19 +20,19 @@ public class RestaurantManageActivity extends AppCompatActivity  implements OnTa
     private TextView tvInfoNumber, tvInfo, tvMenuNumber, tvMenu;
     private Restaurant restaurant;
     @Override
-    public void onSwitchToMenu() {
-        if (restaurant != null) {
-            RestaurantManageMenuFragment menufragment = new RestaurantManageMenuFragment();
+    public void onSwitchToMenu(Restaurant updatedRestaurant) {
+        restaurant = updatedRestaurant; // 儲存使用者修改過的資訊
 
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("restaurant_data", restaurant);
-            menufragment.setArguments(bundle);
+        RestaurantManageMenuFragment menufragment = new RestaurantManageMenuFragment();
 
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_manage_restaurant, menufragment)
-                    .commit();
-            updateStyle(false);
-        }
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("restaurant_data", updatedRestaurant);
+        menufragment.setArguments(bundle);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_manage_restaurant, menufragment)
+                .commit();
+        updateStyle(false);
     }
 
     @Override
@@ -42,6 +42,7 @@ public class RestaurantManageActivity extends AppCompatActivity  implements OnTa
             Bundle bundle = new Bundle();
             bundle.putSerializable("restaurant_data", restaurant);
             infoFragment.setArguments(bundle);
+
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_manage_restaurant, infoFragment)
                     .commit();

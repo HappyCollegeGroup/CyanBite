@@ -87,7 +87,7 @@ public class RestaurantShowInfoFragment extends Fragment {
         Button btnToInfo = view.findViewById(R.id.btn_next);
         btnToInfo.setOnClickListener(v -> {
             if (callback != null) {
-                callback.onSwitchToMenu();  // 通知 Activity 切換頁面
+                callback.onSwitchToMenu(null);  // 通知 Activity 切換頁面
             }
         });
 
