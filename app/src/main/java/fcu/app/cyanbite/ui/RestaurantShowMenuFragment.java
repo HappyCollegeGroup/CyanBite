@@ -1,8 +1,13 @@
 package fcu.app.cyanbite.ui;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -86,24 +91,25 @@ public class RestaurantShowMenuFragment extends Fragment {
         });
 
         Button btnAddToList = view.findViewById(R.id.btn_add);
-        Restaurant finalRestaurant = restaurant;  // 為了 lambda 使用
+        Restaurant thisRestaurant = restaurant;  // 為了 lambda 使用
 
         btnAddToList.setOnClickListener(v -> {
-            if (finalRestaurant != null) {
-                // 將選中的餐廳放入 Bundle
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("selectedRestaurant", finalRestaurant);
+            if (thisRestaurant != null) {
+                // 使用 Fragment Result API 將選中的餐廳回傳給 AddNewGroupRestaurantFragment
+                Bundle resultBundle = new Bundle();
+                resultBundle.putSerializable("selectedRestaurant", thisRestaurant); // 將 Restaurant 物件放入 Bundle
 
-                // 建立並傳入參數給 AddNewGroupRestaurantFragment
-                AddNewGroupRestaurantFragment fragment = new AddNewGroupRestaurantFragment();
-                fragment.addArgument(bundle);  // 正確呼叫 addArgument
-                fragment.setArguments(bundle); // 確保 getArguments() 仍然有效（如果有用到）
+                // 設定 Fragment 結果，"request_restaurant_selection" 是唯一的請求鍵
+                getParentFragmentManager().setFragmentResult("add_selected_restaurant", resultBundle);
 
-                requireActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_manage_restaurant, fragment)  // 注意容器 ID
-                        .addToBackStack(null)
-                        .commit();
+                // 返回上一個 Fragment (AddNewGroupRestaurantFragment)
+                getParentFragmentManager().popBackStack();
+
+                // 移除原有的 Activity.setResult 和 finish()，因為現在是 Fragment 間的通訊
+                // Intent resultIntent = new Intent();
+                // resultIntent.putExtra("selectedRestaurantId", finalRestaurant.getId()); // 傳 ID
+                // getActivity().setResult(RESULT_OK, resultIntent);
+                // getActivity().finish();
             }
         });
 
