@@ -17,6 +17,7 @@ public class Restaurant implements Serializable {
     private int imageResId;
 
     public Restaurant(String name, String phone, String location, List<Food> foodList, int imageResId) {
+        this.id = id;
         this.name = name;
         this.phone = phone;
         this.location = location;
