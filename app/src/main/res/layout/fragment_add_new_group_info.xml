@@ -150,10 +150,12 @@
 
             <Button
                 android:id="@+id/btn_submit_move_to_restaurant"
+                style="@android:style/Widget.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="新增餐廳" />
+                android:text="新增餐廳"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
 
     </ScrollView>

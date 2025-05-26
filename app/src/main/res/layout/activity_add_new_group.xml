@@ -33,7 +33,7 @@
             android:id="@+id/tv_fragment_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="新增餐廳"
+            android:text="新增團購"
             android:textColor="@color/black"
             android:textSize="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -98,7 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="新增餐廳"
+                android:text="加入餐廳"
                 android:textColor="#000000"
                 android:textSize="16sp" />
         </LinearLayout>
