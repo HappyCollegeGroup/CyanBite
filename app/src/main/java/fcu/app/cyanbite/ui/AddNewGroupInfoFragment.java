@@ -68,14 +68,18 @@ public class AddNewGroupInfoFragment extends Fragment {
             groupData.putString("orderingTime", orderingTime);
             groupData.putString("collectionTime", collectionTime);
 
-            AddNewGroupRestaurantFragment fragment = new AddNewGroupRestaurantFragment();
-            fragment.setArguments(groupData);
+//            AddNewGroupRestaurantFragment fragment = new AddNewGroupRestaurantFragment();
+//            fragment.setArguments(groupData);
+//
+//            // Switch to the next fragment
+//            getActivity().getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.fragmentContainerView, fragment)
+//                    .addToBackStack(null)
+//                    .commit();
 
-            // Switch to the next fragment
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainerView, fragment)
-                    .addToBackStack(null)
-                    .commit();
+            if(callback != null){
+                callback.onSwitchToGroupMenu(groupData);
+            }
         });
 
         return view;

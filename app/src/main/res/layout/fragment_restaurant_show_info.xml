@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.RestaurantAddInfoFragment">
+    tools:context=".ui.RestaurantShowInfoFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -21,35 +21,24 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="新增照片"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="@+id/img_btn_restaurant"
-            app:layout_constraintStart_toStartOf="@+id/img_btn_restaurant"
-            app:layout_constraintTop_toBottomOf="@+id/img_btn_restaurant" />
-
-        <TextView
             android:id="@+id/textView15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="30dp"
             android:text="店家名稱"
             android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="@+id/et_food_name"
-            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+            app:layout_constraintStart_toStartOf="@+id/et_name"
+            app:layout_constraintTop_toBottomOf="@+id/img_btn_restaurant" />
 
-        <EditText
-            android:id="@+id/et_food_name"
+        <TextView
+            android:id="@+id/et_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
-            android:ems="10"
-            android:inputType="text"
+            android:text="（店家名稱顯示）"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView15" />
@@ -61,17 +50,17 @@
             android:layout_marginTop="16dp"
             android:text="連絡電話"
             android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="@+id/et_food_name"
-            app:layout_constraintTop_toBottomOf="@+id/et_food_name" />
+            app:layout_constraintStart_toStartOf="@+id/et_name"
+            app:layout_constraintTop_toBottomOf="@+id/et_name" />
 
-        <EditText
+        <TextView
             android:id="@+id/et_phone"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:ems="10"
-            android:inputType="phone"
-            app:layout_constraintEnd_toEndOf="@+id/et_food_name"
+            android:text="（電話顯示）"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/et_name"
             app:layout_constraintStart_toStartOf="@+id/textView16"
             app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
@@ -85,13 +74,13 @@
             app:layout_constraintStart_toStartOf="@+id/et_phone"
             app:layout_constraintTop_toBottomOf="@+id/et_phone" />
 
-        <EditText
+        <TextView
             android:id="@+id/et_location"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:ems="10"
-            android:inputType="text"
+            android:text="（地址顯示）"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="@+id/et_phone"
             app:layout_constraintStart_toStartOf="@+id/textView17"
             app:layout_constraintTop_toBottomOf="@+id/textView17" />

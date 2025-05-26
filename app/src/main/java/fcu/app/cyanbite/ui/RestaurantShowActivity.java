@@ -1,9 +1,9 @@
 package fcu.app.cyanbite.ui;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,36 +15,36 @@ import androidx.core.view.WindowInsetsCompat;
 import fcu.app.cyanbite.R;
 import fcu.app.cyanbite.model.Restaurant;
 
-public class RestaurantManageActivity extends AppCompatActivity  implements OnTabSwitchListener   {
-
+public class RestaurantShowActivity extends AppCompatActivity implements OnTabSwitchListener, OnGroupSwitchListener {
     private TextView tvInfoNumber, tvInfo, tvMenuNumber, tvMenu;
     private Restaurant restaurant;
     @Override
-    public void onSwitchToMenu(Restaurant updatedRestaurant) {
-        restaurant = updatedRestaurant; // 儲存使用者修改過的資訊
+    public void onSwitchToMenu(Restaurant restaurants) {
+        if (restaurant != null) {
+            RestaurantShowMenuFragment showmenufragment = new RestaurantShowMenuFragment();
 
-        RestaurantManageMenuFragment menufragment = new RestaurantManageMenuFragment();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("restaurant_data", restaurant);
+            showmenufragment.setArguments(bundle);
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("restaurant_data", updatedRestaurant);
-        menufragment.setArguments(bundle);
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_manage_restaurant, menufragment)
-                .commit();
-        updateStyle(false);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_manage_restaurant, showmenufragment)
+                    .addToBackStack(null)
+                    .commit();
+            updateStyle(false);
+        }
     }
 
     @Override
     public void onSwitchToInfo() {
         if (restaurant != null) {
-            RestaurantManageInfoFragment infoFragment = new RestaurantManageInfoFragment();
+            RestaurantShowInfoFragment infoFragment = new RestaurantShowInfoFragment();
             Bundle bundle = new Bundle();
             bundle.putSerializable("restaurant_data", restaurant);
             infoFragment.setArguments(bundle);
-
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_manage_restaurant, infoFragment)
+                    .addToBackStack(null)
                     .commit();
             updateStyle(true);
         }
@@ -74,7 +74,7 @@ public class RestaurantManageActivity extends AppCompatActivity  implements OnTa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_restaurant_manage);
+        setContentView(R.layout.activity_restaurant_show);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -91,7 +91,7 @@ public class RestaurantManageActivity extends AppCompatActivity  implements OnTa
             restaurant = (Restaurant) getIntent().getSerializableExtra("restaurant_data");
 
             if (restaurant != null) {
-                RestaurantManageInfoFragment infoFragment = new RestaurantManageInfoFragment();
+                RestaurantShowInfoFragment infoFragment = new RestaurantShowInfoFragment();
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("restaurant_data", restaurant);
@@ -101,8 +101,31 @@ public class RestaurantManageActivity extends AppCompatActivity  implements OnTa
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_manage_restaurant, infoFragment)
+                        .addToBackStack(null)
                         .commit();
             }
         }
     }
+
+    @Override
+    public void onSwitchToGroupInfo() {
+
+    }
+
+    @Override
+    public void onSwitchToGroupMenu(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onSwitchToGroup() {
+        // 根據需求切換 fragment 或 finish Activity
+        // 例如顯示上一個 Fragment 或返回團購資訊頁面
+        Toast.makeText(this, "返回團購資訊畫面", Toast.LENGTH_SHORT).show();
+
+        // 或是切回某個 Fragment
+        getSupportFragmentManager()
+                .popBackStack(); // 回上一層
+    }
+
 }

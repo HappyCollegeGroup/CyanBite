@@ -40,19 +40,27 @@ public class Food implements Serializable {
     public Bitmap getImageBitmap() {
         Bitmap bitmap = null;
 
-        // 去除開頭的 data URI（如果有）
-        if (image.contains(",")) {
-            image = image.substring(image.indexOf(",") + 1);
+        if (image == null || image.trim().isEmpty()) {
+            return null;  // 若 image 為 null 或空字串，直接回傳 null
         }
 
         try {
+            // 去除 data URI 的前綴（如有）
+            if (image.contains(",")) {
+                image = image.substring(image.indexOf(",") + 1);
+            }
+
             byte[] decodedBytes = Base64.decode(image, Base64.DEFAULT);
             bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+        } catch (IllegalArgumentException | NullPointerException e) {
+            e.printStackTrace();  // 解碼失敗或 image 為 null
         }
 
         return bitmap;
+    }
+
+    public String getImage() {
+        return image;
     }
 
     public void setName(String name) {
@@ -61,6 +69,9 @@ public class Food implements Serializable {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+    public void setPrice(Long price) {
+        this.price = Math.toIntExact(price);
     }
 
     public void setImageResId(int imageResId) {

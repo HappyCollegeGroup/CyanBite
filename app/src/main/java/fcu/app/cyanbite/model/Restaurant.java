@@ -12,6 +12,7 @@ import java.util.List;
 import fcu.app.cyanbite.R;
 
 public class Restaurant implements Serializable {
+    private String id;
     private String name;
     private String phone;
     private String location;
@@ -20,6 +21,7 @@ public class Restaurant implements Serializable {
     private int imageResId;
 
     public Restaurant(String name, String phone, String location, List<Food> foodList, int imageResId) {
+        this.id = id;
         this.name = name;
         this.phone = phone;
         this.location = location;
@@ -27,12 +29,17 @@ public class Restaurant implements Serializable {
         this.imageResId = imageResId;
     }
 
-    public Restaurant(String name, String phone, String location, List<Food> foodList, String image) {
+    public Restaurant(String id, String name, String phone, String location, List<Food> foodList, String image) {
+        this.id = id;
         this.name = name;
         this.phone = phone;
         this.location = location;
         this.foodList = foodList;
         this.image = image;
+    }
+
+    public String getImage() {
+        return image;
     }
 
     public Bitmap getImageBitmap() {
@@ -51,6 +58,34 @@ public class Restaurant implements Serializable {
         }
 
         return bitmap;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setImageResId(int imageResId) {
+        this.imageResId = imageResId;
     }
 
     public String getName() {
