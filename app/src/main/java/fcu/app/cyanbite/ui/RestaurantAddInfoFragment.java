@@ -10,8 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import fcu.app.cyanbite.R;
+import fcu.app.cyanbite.model.Restaurant;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,19 +36,12 @@ public class RestaurantAddInfoFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private Restaurant restaurant;
+
     public RestaurantAddInfoFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RestaurantAddInfoFragment.
-     */
-    // TODO: Rename and change types and number of parameters
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -79,10 +77,33 @@ public class RestaurantAddInfoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_restaurant_add_info, container, false);
 
+        Bundle bundle = getArguments();
+
+        // 2. 找元件
+        EditText etName = view.findViewById(R.id.et_food_name);
+        EditText etPhone = view.findViewById(R.id.et_phone);
+        EditText etLocation = view.findViewById(R.id.et_location);
+
+        if (bundle != null) {
+            restaurant = (Restaurant) bundle.getSerializable("restaurant_new_data");
+
+            etName.setText(restaurant.getName());
+            etPhone.setText(restaurant.getPhone());
+            etLocation.setText(restaurant.getLocation());
+        } else {
+            Toast.makeText(getActivity(), "nothing happen", Toast.LENGTH_SHORT).show();
+        }
+
         Button btnToSecond = view.findViewById(R.id.btn_next);
         btnToSecond.setOnClickListener(v -> {
+            if (restaurant != null) {
+                restaurant.setName(etName.getText().toString());
+                restaurant.setPhone(etPhone.getText().toString());
+                restaurant.setLocation(etLocation.getText().toString());
+            }
+
             if (callback != null) {
-                callback.onSwitchToMenu(null);  // 通知 Activity 切換
+                callback.onSwitchToMenu(restaurant);  // 通知 Activity 切換
             }
         });
 

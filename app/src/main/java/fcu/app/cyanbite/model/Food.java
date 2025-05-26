@@ -70,6 +70,9 @@ public class Food implements Serializable {
     public void setPrice(int price) {
         this.price = price;
     }
+    public void setPrice(Long price) {
+        this.price = Math.toIntExact(price);
+    }
 
     public void setImageResId(int imageResId) {
         this.imageResId = imageResId;

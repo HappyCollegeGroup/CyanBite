@@ -34,6 +34,10 @@ public class Restaurant implements Serializable {
         this.image = image;
     }
 
+    public String getImage() {
+        return image;
+    }
+
     public Bitmap getImageBitmap() {
         Bitmap bitmap = null;
 
