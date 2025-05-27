@@ -23,8 +23,8 @@
                 android:id="@+id/textView21"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="餐廳列表"
-                android:layout_marginTop="24dp" />
+                android:layout_marginTop="24dp"
+                android:text="餐廳列表" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout8"
@@ -40,13 +40,14 @@
                     android:id="@+id/et_group_restaurant"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="請選擇餐廳"
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_restaurant_list"
                 android:layout_width="308dp"
-                android:layout_height="332dp"
+                android:layout_height="314dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="24dp"
@@ -61,8 +62,8 @@
                 style="@android:style/Widget.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="新增團購"
                 android:layout_marginTop="24dp"
+                android:text="新增團購"
                 android:textColor="@color/white" />
 
 

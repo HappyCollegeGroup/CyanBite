@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference; // Import DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -151,10 +152,11 @@ public class GroupFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e ->{
+                    // Log error for debugging
+                    Log.e("GroupFragment", "Error loading groups: " + e.getMessage());
+                    Toast.makeText(getContext(), "無法載入群組資料: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
 
-                        }
-
-                );
         adapter.setOnItemClickListener(new OrderGroupNameListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(GroupName group) {
@@ -172,7 +174,19 @@ public class GroupFragment extends Fragment {
                                 String location = doc.getString("location");
                                 String orderingTime = doc.getString("orderingTime");
                                 String collectionTime = doc.getString("collectionTime");
-                                List<String> restaurantList = (List<String>) doc.get("restaurant");
+
+                                // --- CRITICAL FIX HERE ---
+                                // Get the list of DocumentReferences
+                                List<DocumentReference> restaurantRefs = (List<DocumentReference>) doc.get("restaurant");
+
+                                // Convert DocumentReferences to their path strings
+                                ArrayList<String> restaurantPathsToPass = new ArrayList<>();
+                                if (restaurantRefs != null) {
+                                    for (DocumentReference ref : restaurantRefs) {
+                                        restaurantPathsToPass.add(ref.getPath());
+                                    }
+                                }
+                                // --- END CRITICAL FIX ---
 
                                 Intent intent = new Intent(getActivity(), GroupDetailActivity.class);
                                 intent.putExtra("groupName", groupName);
@@ -180,13 +194,21 @@ public class GroupFragment extends Fragment {
                                 intent.putExtra("groupLocation", location);
                                 intent.putExtra("orderingTime", orderingTime);
                                 intent.putExtra("collectionTime", collectionTime);
-                                intent.putStringArrayListExtra("restaurant", new ArrayList<>(restaurantList));
+                                // Pass the ArrayList of Strings (paths)
+                                intent.putStringArrayListExtra("restaurantPaths", restaurantPathsToPass); // Changed key to "restaurantPaths" to match GroupDetailActivity
+
                                 startActivity(intent);
 
                             } else {
+                                // Log error if group not found
+                                Log.w("GroupFragment", "Group not found for detail view: " + groupName);
+                                Toast.makeText(getContext(), "找不到該群組的詳細資料。", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .addOnFailureListener(e -> {
+                            // Log and show error for query failure
+                            Log.e("GroupFragment", "Error fetching group details: " + e.getMessage());
+                            Toast.makeText(getContext(), "獲取群組詳細資料失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         });
             }
         });

@@ -1,40 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.AddNewGroupInfoFragment">
 
+    <!-- 可捲動區域 -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="16dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:paddingStart="24dp"
+        android:paddingTop="24dp"
         android:paddingEnd="24dp"
-        android:paddingTop="24dp">
+        android:paddingBottom="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="團購名稱" />
-
+            <!-- 各項輸入欄位 -->
+            <TextView android:text="團購名稱" style="@style/TextTitleStyle"/>
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:boxBackgroundMode="outline"
-                app:boxCornerRadiusBottomEnd="4dp"
-                app:boxCornerRadiusBottomStart="4dp"
-                app:boxCornerRadiusTopEnd="4dp"
-                app:boxCornerRadiusTopStart="4dp">
-
+                style="@style/OutlinedInputStyle">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_group_name"
                     android:layout_width="match_parent"
@@ -42,47 +33,19 @@
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="團購電話" />
-
+            <TextView android:text="團購電話" style="@style/TextTitleStyle" android:layout_marginTop="24dp"/>
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:boxBackgroundMode="outline"
-                app:boxCornerRadiusBottomEnd="4dp"
-                app:boxCornerRadiusBottomStart="4dp"
-                app:boxCornerRadiusTopEnd="4dp"
-                app:boxCornerRadiusTopStart="4dp">
-
+                style="@style/OutlinedInputStyle">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_group_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text|phone" />
+                    android:inputType="phone" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="取餐地點" />
-
+            <TextView android:text="取餐地點" style="@style/TextTitleStyle" android:layout_marginTop="24dp"/>
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:boxBackgroundMode="outline"
-                app:boxCornerRadiusBottomEnd="4dp"
-                app:boxCornerRadiusBottomStart="4dp"
-                app:boxCornerRadiusTopEnd="4dp"
-                app:boxCornerRadiusTopStart="4dp">
-
+                style="@style/OutlinedInputStyle">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_group_location"
                     android:layout_width="match_parent"
@@ -90,23 +53,9 @@
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="點餐時間" />
-
+            <TextView android:text="點餐時間" style="@style/TextTitleStyle" android:layout_marginTop="24dp"/>
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:boxBackgroundMode="outline"
-                app:boxCornerRadiusBottomEnd="4dp"
-                app:boxCornerRadiusBottomStart="4dp"
-                app:boxCornerRadiusTopEnd="4dp"
-                app:boxCornerRadiusTopStart="4dp">
-
+                style="@style/OutlinedInputStyle">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_group_ordering_time"
                     android:layout_width="match_parent"
@@ -114,49 +63,27 @@
                     android:inputType="text|time" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="取餐時間" />
-
+            <TextView android:text="取餐時間" style="@style/TextTitleStyle" android:layout_marginTop="24dp"/>
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout7"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:boxBackgroundMode="outline"
-                app:boxCornerRadiusBottomEnd="4dp"
-                app:boxCornerRadiusBottomStart="4dp"
-                app:boxCornerRadiusTopEnd="4dp"
-                app:boxCornerRadiusTopStart="4dp">
-
+                style="@style/OutlinedInputStyle">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_group_collection_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text|time" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout8"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:boxBackgroundMode="outline"
-                app:boxCornerRadiusBottomEnd="4dp"
-                app:boxCornerRadiusBottomStart="4dp"
-                app:boxCornerRadiusTopEnd="4dp"
-                app:boxCornerRadiusTopStart="4dp"/>
-
-            <Button
-                android:id="@+id/btn_submit_move_to_restaurant"
-                style="@android:style/Widget.Button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="新增餐廳"
-                android:textColor="#FFFFFF" />
         </LinearLayout>
-
     </ScrollView>
-</FrameLayout>
+
+    <!-- 底部固定按鈕 -->
+    <Button
+        android:id="@+id/btn_submit_move_to_restaurant"
+        style="@android:style/Widget.Button"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="新增餐廳"
+        android:textColor="@android:color/white"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/cyan"/>
+</LinearLayout>
