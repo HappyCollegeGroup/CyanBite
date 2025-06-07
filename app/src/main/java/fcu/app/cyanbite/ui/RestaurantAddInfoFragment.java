@@ -1,11 +1,18 @@
 package fcu.app.cyanbite.ui;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +21,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import fcu.app.cyanbite.R;
 import fcu.app.cyanbite.model.Restaurant;
@@ -26,6 +37,7 @@ import fcu.app.cyanbite.model.Restaurant;
 public class RestaurantAddInfoFragment extends Fragment {
 
     private OnTabSwitchListener callback;
+    private static final int PICK_IMAGE_REQUEST = 1;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -107,6 +119,68 @@ public class RestaurantAddInfoFragment extends Fragment {
             }
         });
 
+        ImageButton imgbtn = view.findViewById(R.id.img_btn_restaurant);
+        imgbtn.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, PICK_IMAGE_REQUEST);  // 啟動圖片選擇器
+        });
+
         return view;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // 確認請求碼與結果
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
+            Uri imageUri = data.getData();  // 取得選擇的圖片 URI
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+                ImageButton imgbtn = getView().findViewById(R.id.img_btn_restaurant);
+                imgbtn.setImageBitmap(bitmap);  // 將選擇的圖片設置為 ImageButton 的圖片
+
+                String base64String = encodeImageToDataUrl(imageUri);
+
+                if (restaurant != null) {
+                    restaurant.setImage(base64String);  // 儲存到物件
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getActivity(), "Failed to load image", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private String encodeImageToDataUrl(Uri imageUri) throws IOException {
+        // 讀取圖片輸入流
+        InputStream inputStream = requireContext().getContentResolver().openInputStream(imageUri);
+        Bitmap originalBitmap = BitmapFactory.decodeStream(inputStream);
+
+        // 步驟一：縮小圖片（最多寬或高為800px）
+        Bitmap resizedBitmap = resizeBitmap(originalBitmap, 800);
+
+        // 步驟二：壓縮圖片為 JPEG（壓縮品質 70%）
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
+        byte[] byteArray = outputStream.toByteArray();
+
+        // 步驟三：取得 mimeType 並組成 Data URL
+        String mimeType = requireContext().getContentResolver().getType(imageUri);
+        String base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+        return "data:" + mimeType + ";base64," + base64;
+    }
+
+    private Bitmap resizeBitmap(Bitmap bitmap, int maxSize) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        float scale = Math.min((float) maxSize / width, (float) maxSize / height);
+        if (scale >= 1) return bitmap; // 如果太小，不需縮放
+
+        int newWidth = Math.round(scale * width);
+        int newHeight = Math.round(scale * height);
+        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+    }
+
 }
