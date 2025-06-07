@@ -17,10 +17,15 @@ public class Group implements Serializable {
     private int imageResId;
     private String image;
     private String description;
+    private String city;
+    private String district;
 
-    public Group(String name, String phone, String location, String orderingTime, String collectionTime, List<Restaurant> restaurantList, int imageResId) {
+    public Group(String name, String phone, String city, String district, String description, String location, String orderingTime, String collectionTime, List<Restaurant> restaurantList, int imageResId) {
         this.name = name;
         this.phone = phone;
+        this.city = city;
+        this.district = district;
+        this.description = description;
         this.location = location;
         this.orderingTime = orderingTime;
         this.collectionTime = collectionTime;

@@ -20,7 +20,6 @@
             android:gravity="center"
             android:layout_marginBottom="24dp" />
 
-        <!-- 團購名稱 -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,7 +33,19 @@
                 android:inputType="textPersonName"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- 電話 -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="團購說明"
+            android:layout_marginTop="16dp" >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_group_detail_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -49,11 +60,38 @@
                 android:inputType="phone" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- 地點 -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="地點"
+            android:hint="縣市"
+            style="@style/Widget.MyApp.TextInputLayout"
+            android:layout_marginTop="16dp" >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_group_detail_city"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPostalAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="地區"
+            style="@style/Widget.MyApp.TextInputLayout"
+            android:layout_marginTop="16dp" >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_group_detail_district"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPostalAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="取餐地點"
             style="@style/Widget.MyApp.TextInputLayout"
             android:layout_marginTop="16dp" >
 
@@ -64,7 +102,6 @@
                 android:inputType="textPostalAddress" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- 訂購時間 -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,7 +116,6 @@
                 android:inputType="datetime" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- 取餐時間 -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -94,7 +130,6 @@
                 android:inputType="datetime" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- 餐廳 -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
