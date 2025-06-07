@@ -171,22 +171,22 @@ public class GroupFragment extends Fragment {
                                 DocumentSnapshot doc = querySnapshot.getDocuments().get(0);
 
                                 String phone = doc.getString("phone");
-                                String location = doc.getString("location");
-                                String orderingTime = doc.getString("orderingTime");
+                                String location = doc.getString("place");
+                                String orderingTime = doc.getString("orderTime");
                                 String collectionTime = doc.getString("collectionTime");
 
-                                // --- CRITICAL FIX HERE ---
-                                // Get the list of DocumentReferences
+                                String groupCity = doc.getString("city");
+                                String groupDistrict = doc.getString("district");
+                                String groupDescription = doc.getString("description");
+
                                 List<DocumentReference> restaurantRefs = (List<DocumentReference>) doc.get("restaurant");
 
-                                // Convert DocumentReferences to their path strings
                                 ArrayList<String> restaurantPathsToPass = new ArrayList<>();
                                 if (restaurantRefs != null) {
                                     for (DocumentReference ref : restaurantRefs) {
                                         restaurantPathsToPass.add(ref.getPath());
                                     }
                                 }
-                                // --- END CRITICAL FIX ---
 
                                 Intent intent = new Intent(getActivity(), GroupDetailActivity.class);
                                 intent.putExtra("groupName", groupName);
@@ -194,8 +194,12 @@ public class GroupFragment extends Fragment {
                                 intent.putExtra("groupLocation", location);
                                 intent.putExtra("orderingTime", orderingTime);
                                 intent.putExtra("collectionTime", collectionTime);
-                                // Pass the ArrayList of Strings (paths)
-                                intent.putStringArrayListExtra("restaurantPaths", restaurantPathsToPass); // Changed key to "restaurantPaths" to match GroupDetailActivity
+
+                                intent.putExtra("groupCity", groupCity);
+                                intent.putExtra("groupDistrict", groupDistrict);
+                                intent.putExtra("groupDescription", groupDescription);
+
+                                intent.putStringArrayListExtra("restaurantPaths", restaurantPathsToPass);
 
                                 startActivity(intent);
 

@@ -27,6 +27,10 @@ public class AddNewGroupInfoFragment extends Fragment {
     private EditText etGroupOrderingTime;
     private EditText etGroupCollectionTime;
 
+    private EditText etGroupCity;
+    private EditText etGroupDistrict;
+    private EditText etGroupDescription;
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -47,6 +51,12 @@ public class AddNewGroupInfoFragment extends Fragment {
         etGroupOrderingTime = view.findViewById(R.id.et_group_ordering_time);
         etGroupCollectionTime = view.findViewById(R.id.et_group_collection_time);
 
+        etGroupCity = view.findViewById(R.id.et_group_city);
+        etGroupDistrict = view.findViewById(R.id.et_group_district);
+        etGroupDescription = view.findViewById(R.id.et_group_description);
+
+
+
         Button btnNext = view.findViewById(R.id.btn_submit_move_to_restaurant);  // Change the button ID accordingly
         btnNext.setOnClickListener(v -> {
             String groupName = etGroupName.getText().toString().trim();
@@ -55,8 +65,14 @@ public class AddNewGroupInfoFragment extends Fragment {
             String orderingTime = etGroupOrderingTime.getText().toString().trim();
             String collectionTime = etGroupCollectionTime.getText().toString().trim();
 
+            String groupCity = etGroupCity.getText().toString().trim();
+            String groupDistrict = etGroupDistrict.getText().toString().trim();
+            String groupDescription = etGroupDescription.getText().toString().trim();
+
+
             if (groupName.isEmpty() || groupPhone.isEmpty() || groupLocation.isEmpty()
-                    || orderingTime.isEmpty() || collectionTime.isEmpty()) {
+                    || orderingTime.isEmpty() || collectionTime.isEmpty() || groupCity.isEmpty() || groupDistrict.isEmpty()
+            || groupDescription.isEmpty()) {
                 Toast.makeText(getActivity(), "請填寫所有欄位", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -67,6 +83,11 @@ public class AddNewGroupInfoFragment extends Fragment {
             groupData.putString("groupLocation", groupLocation);
             groupData.putString("orderingTime", orderingTime);
             groupData.putString("collectionTime", collectionTime);
+
+            groupData.putString("groupCity", groupCity);
+            groupData.putString("groupDistrict", groupDistrict);
+            groupData.putString("groupDescription", groupDescription);
+
 
 //            AddNewGroupRestaurantFragment fragment = new AddNewGroupRestaurantFragment();
 //            fragment.setArguments(groupData);

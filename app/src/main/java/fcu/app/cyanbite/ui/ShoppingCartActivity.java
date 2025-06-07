@@ -45,7 +45,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
 
         List<Group> groupList = new ArrayList<>();
         for (int i = 1; i <= 4; i++) {
-            groupList.add(new Group("逢甲一起訂" + i, "0900-000-000", "逢甲大學", "9:00~10:00", "12:00", restaurantList, R.drawable.image));
+//            groupList.add(new Group("逢甲一起訂" + i, "0900-000-000", "逢甲大學", "9:00~10:00", "12:00", restaurantList, R.drawable.image));
         }
 
         // RecyclerView 設定

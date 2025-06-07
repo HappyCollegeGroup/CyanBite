@@ -36,7 +36,12 @@ public class GroupDetailActivity extends AppCompatActivity {
         String groupLocation = getIntent().getStringExtra("groupLocation");
         String orderingTime = getIntent().getStringExtra("orderingTime");
         String collectionTime = getIntent().getStringExtra("collectionTime");
-        // This list now definitively contains full DocumentReference paths like "/restaurant/SOH2D59d3OqunVFpKsbg"
+
+        String groupCity = getIntent().getStringExtra("groupCity");
+        String groupDistrict = getIntent().getStringExtra("groupDistrict");
+        String groupDescription = getIntent().getStringExtra("groupDescription");
+
+
         List<String> restaurantPaths = getIntent().getStringArrayListExtra("restaurantPaths");
 
         // Initialize EditText fields
@@ -47,6 +52,12 @@ public class GroupDetailActivity extends AppCompatActivity {
         EditText etCollectionTime = findViewById(R.id.et_group_detail_collection_time);
         EditText etRestaurant = findViewById(R.id.et_group_detail_restaurant);
 
+        EditText etGroupCity = findViewById(R.id.et_group_detail_city);
+        EditText etGroupDistrict = findViewById(R.id.et_group_detail_district);
+        EditText etGroupDescription = findViewById(R.id.et_group_detail_description);
+
+
+
         // Set initial values to EditText fields
         etGroupName.setText(originalGroupName);
         etGroupPhone.setText(groupPhone);
@@ -54,9 +65,11 @@ public class GroupDetailActivity extends AppCompatActivity {
         etOrderingTime.setText(orderingTime);
         etCollectionTime.setText(collectionTime);
 
-        // --- Displaying Restaurant Names ---
-        // Instead of just displaying paths or IDs, let's fetch the actual names for better UX.
-        // This requires an asynchronous operation to get the name for each path.
+        etGroupCity.setText(groupCity);
+        etGroupDistrict.setText(groupDistrict);
+        etGroupDescription.setText(groupDescription);
+
+
         if (restaurantPaths != null && !restaurantPaths.isEmpty()) {
             StringBuilder restaurantNamesBuilder = new StringBuilder();
             final int[] completedQueries = {0}; // To track completion of all queries
@@ -103,6 +116,12 @@ public class GroupDetailActivity extends AppCompatActivity {
             String newCollectionTime = etCollectionTime.getText().toString();
             String restaurantInput = etRestaurant.getText().toString().trim();
 
+            String newCity = etGroupCity.getText().toString().trim();
+            String newDistrict = etGroupDistrict.getText().toString().trim();
+            String newDescription = etGroupDescription.getText().toString().trim();
+
+
+
             List<String> inputRestaurantNames = new ArrayList<>();
             if (!restaurantInput.isEmpty()) {
                 String[] parts = restaurantInput.split("\\s*,\\s*");
@@ -123,12 +142,10 @@ public class GroupDetailActivity extends AppCompatActivity {
                             DocumentSnapshot doc = querySnapshot.getDocuments().get(0);
                             String docId = doc.getId();
 
-                            // --- Convert User Input (Restaurant Names) to DocumentReferences ---
-                            // This now requires querying the "restaurants" collection by name
-                            // to get their corresponding DocumentReferences.
+
                             List<DocumentReference> newRestaurantReferences = new ArrayList<>();
                             if (inputRestaurantNames.isEmpty()) {
-                                updateGroup(docId, newName, newPhone, newLocation, newOrderingTime, newCollectionTime, newRestaurantReferences);
+                                updateGroup(docId, newName, newPhone, newLocation, newOrderingTime, newCollectionTime, newCity, newDistrict, newDescription, newRestaurantReferences);
                             } else {
                                 final int[] completedRestaurantQueries = {0};
                                 for (String rName : inputRestaurantNames) {
@@ -148,14 +165,14 @@ public class GroupDetailActivity extends AppCompatActivity {
                                                 // Check if all restaurant queries are done
                                                 if (completedRestaurantQueries[0] == inputRestaurantNames.size()) {
                                                     // Only update the group once all restaurant references are resolved
-                                                    updateGroup(docId, newName, newPhone, newLocation, newOrderingTime, newCollectionTime, newRestaurantReferences);
+                                                    updateGroup(docId, newName, newPhone, newLocation, newOrderingTime, newCollectionTime, newCity, newDistrict, newDescription, newRestaurantReferences);
                                                 }
                                             })
                                             .addOnFailureListener(e -> {
                                                 Toast.makeText(this, "查詢餐廳失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show();
                                                 completedRestaurantQueries[0]++;
                                                 if (completedRestaurantQueries[0] == inputRestaurantNames.size()) {
-                                                    updateGroup(docId, newName, newPhone, newLocation, newOrderingTime, newCollectionTime, newRestaurantReferences);
+                                                    updateGroup(docId, newName, newPhone, newLocation, newOrderingTime, newCollectionTime, newCity, newDistrict, newDescription, newRestaurantReferences);
                                                 }
                                             });
                                 }
@@ -201,17 +218,22 @@ public class GroupDetailActivity extends AppCompatActivity {
         });
     }
 
-    // Helper method to perform the group update
     private void updateGroup(String docId, String newName, String newPhone, String newLocation,
-                             String newOrderingTime, String newCollectionTime,
+                             String newOrderingTime, String newCollectionTime, String newCity, String newDistrict,
+                             String newDescription,
                              List<DocumentReference> newRestaurantReferences) {
         db.collection("groups").document(docId)
                 .update(
                         "name", newName,
                         "phone", newPhone,
-                        "location", newLocation,
-                        "orderingTime", newOrderingTime,
+                        "place", newLocation,
+                        "orderTime", newOrderingTime,
                         "collectionTime", newCollectionTime,
+
+                        "city", newCity,
+                        "district", newDistrict,
+                        "description", newDescription,
+
                         "restaurant", newRestaurantReferences
                 )
                 .addOnSuccessListener(unused -> {

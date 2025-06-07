@@ -36,6 +36,23 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
+                android:id="@+id/textView22"
+                style="@style/TextTitleStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="團購介紹" />
+
+            <com.google.android.material.textfield.TextInputLayout style="@style/OutlinedInputStyle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_group_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
                 style="@style/TextTitleStyle"
                 android:layout_marginTop="24dp"
                 android:text="團購電話" />
@@ -50,7 +67,42 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
+                android:id="@+id/textView21"
                 style="@style/TextTitleStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="縣市" />
+
+            <com.google.android.material.textfield.TextInputLayout style="@style/OutlinedInputStyle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_group_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                style="@style/TextTitleStyle"
+                android:layout_marginTop="24dp"
+                android:text="地區" />
+
+            <com.google.android.material.textfield.TextInputLayout style="@style/OutlinedInputStyle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_group_district"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <TextView
+                android:id="@+id/textView20"
+                style="@style/TextTitleStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="取餐地點" />
 

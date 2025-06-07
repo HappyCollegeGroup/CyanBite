@@ -40,6 +40,11 @@ public class AddNewGroupRestaurantFragment extends Fragment {
     private String groupLocation;
     private String orderingTime;
     private String collectionTime;
+
+    private String groupCity;
+    private String groupDistrict;
+    private String groupDescription;
+
     private OnGroupSwitchListener callback;
     private FirebaseFirestore db;
     private Bundle prev;
@@ -141,6 +146,7 @@ public class AddNewGroupRestaurantFragment extends Fragment {
                             String image = doc.getString("image");
                             String address = doc.getString("address");
                             String phone = doc.getString("phone");
+
                             List<Map<String, Object>> docFoodList = (List<Map<String, Object>>) doc.get("menu");
                             List<Food> foodList = new ArrayList<>();
                             if (docFoodList != null) {
@@ -192,13 +198,20 @@ public class AddNewGroupRestaurantFragment extends Fragment {
             orderingTime = prev.getString("orderingTime");
             collectionTime = prev.getString("collectionTime");
 
+            groupCity = prev.getString("groupCity");
+            groupDistrict = prev.getString("groupDistrict");
+            groupDescription = prev.getString("groupDescription");
+
+
+
             // 再次檢查是否所有資訊都存在
             if (groupName == null || groupPhone == null || groupLocation == null || orderingTime == null || collectionTime == null) {
                 Toast.makeText(getActivity(), "團購基本資訊缺失，無法提交！", Toast.LENGTH_LONG).show();
                 Log.e(TAG, "Missing group basic info: " +
                         "name=" + groupName + ", phone=" + groupPhone +
                         ", location=" + groupLocation + ", orderingTime=" + orderingTime +
-                        ", collectionTime=" + collectionTime);
+                        ", collectionTime=" + collectionTime +
+                        ", city=" + groupCity + ", district=" + groupDistrict + ", description=" + groupDescription);
                 return;
             }
 
@@ -217,9 +230,14 @@ public class AddNewGroupRestaurantFragment extends Fragment {
             Map<String, Object> group = new HashMap<>();
             group.put("name", groupName);
             group.put("phone", groupPhone);
-            group.put("location", groupLocation);
-            group.put("orderingTime", orderingTime);
+            group.put("place", groupLocation);
+            group.put("orderTime", orderingTime);
             group.put("collectionTime", collectionTime);
+
+            group.put("city", groupCity);
+            group.put("district", groupDistrict);
+            group.put("description", groupDescription);
+
 
             List<DocumentReference> restaurantRefs = new ArrayList<>();
             for (String restId : selectedRestaurantIds) {
