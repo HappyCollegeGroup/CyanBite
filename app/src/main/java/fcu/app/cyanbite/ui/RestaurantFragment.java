@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -113,7 +115,10 @@ public class RestaurantFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String userUid = user.getUid();
         db.collection("restaurant")
+                .whereEqualTo("uid", userUid)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

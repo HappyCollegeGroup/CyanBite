@@ -6,10 +6,11 @@
     android:layout_height="match_parent">
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/img_btn_food"
         android:layout_width="178dp"
         android:layout_height="137dp"
         android:layout_marginTop="16dp"
+        android:scaleType="fitCenter"
         android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,9 +24,9 @@
         android:layout_marginTop="16dp"
         android:text="新增照片"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/imageButton"
-        app:layout_constraintStart_toStartOf="@+id/imageButton"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton" />
+        app:layout_constraintEnd_toEndOf="@+id/img_btn_food"
+        app:layout_constraintStart_toStartOf="@+id/img_btn_food"
+        app:layout_constraintTop_toBottomOf="@+id/img_btn_food" />
 
     <TextView
         android:id="@+id/textView15"
@@ -66,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
-        android:inputType="text"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="@+id/et_food_name"
         app:layout_constraintStart_toStartOf="@+id/textView16"
         app:layout_constraintTop_toBottomOf="@+id/textView16" />

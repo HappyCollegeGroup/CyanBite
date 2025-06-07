@@ -1,22 +1,36 @@
 package fcu.app.cyanbite.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +47,7 @@ import fcu.app.cyanbite.model.Restaurant;
  * Use the {@link RestaurantAddMenuFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RestaurantAddMenuFragment extends Fragment {
+public class RestaurantAddMenuFragment extends Fragment implements ImageSelectListener{
 
     private OnTabSwitchListener callback;
 
@@ -49,11 +63,22 @@ public class RestaurantAddMenuFragment extends Fragment {
     private RestaurantMenuListAdapter adapter;
     private List<Food> foodList;
     private Restaurant restaurant;
+    private ActivityResultLauncher<Intent> pickImageLauncher;
+    private Food currentSelectedFood;
+    private ImageButton currentImageButton;
 
     public RestaurantAddMenuFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onSelectImageRequested(Food food, ImageButton imageButton) {
+        currentSelectedFood = food;
+        currentImageButton = imageButton;
+
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickImageLauncher.launch(intent);
+    }
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -112,6 +137,11 @@ public class RestaurantAddMenuFragment extends Fragment {
 
         Button btnToList = view.findViewById(R.id.btn_save);
         btnToList.setOnClickListener(v -> {
+//            if (foodList == null || foodList.isEmpty()) {
+//                Toast.makeText(getContext(), "請先新增至少一項餐點", Toast.LENGTH_SHORT).show();
+//                return; // 中斷送出流程
+//            }
+
             Intent intent = new Intent(getActivity(), MainActivity.class);
 
             restaurant.setFoodList(foodList);
@@ -135,6 +165,13 @@ public class RestaurantAddMenuFragment extends Fragment {
             updates.put("phone", restaurant.getPhone());
             updates.put("address", restaurant.getLocation());
             updates.put("image", restaurant.getImage());
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+                updates.put("uid", user.getUid());
+            } else {
+                Toast.makeText(getContext(), "尚未登入，無法取得 UID", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             // 執行更新
             db.collection("restaurant")
@@ -159,9 +196,76 @@ public class RestaurantAddMenuFragment extends Fragment {
         // 不要加「新增」，adapter 會自動補上！
 
         // 設定 Adapter
-        adapter = new RestaurantMenuListAdapter(requireContext(), foodList);
+        adapter = new RestaurantMenuListAdapter(requireContext(), foodList, this);
         recyclerView.setAdapter(adapter);
 
+        pickImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        Uri imageUri = result.getData().getData();
+                        Toast.makeText(getContext(), "圖片選擇成功", Toast.LENGTH_SHORT).show();
+
+                        try {
+                            String base64String = encodeImageToDataUrl(imageUri);
+
+                            Toast.makeText(getContext(), "準備更新圖片到Food物件", Toast.LENGTH_SHORT).show();
+                            adapter.updateFoodImage(currentSelectedFood, base64String);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), "圖片編碼失敗: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "圖片選擇取消或失敗", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
         return view;
+    }
+
+    private Bitmap decodeBase64ToBitmap(String base64Str) {
+        // 去除前綴 "data:image/jpeg;base64," 或類似的部分
+        String pureBase64 = base64Str.substring(base64Str.indexOf(",") + 1);
+        byte[] decodedBytes = Base64.decode(pureBase64, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+    }
+
+    public void updateFoodImage(Food food, String base64Image, ImageButton imgbtn) {
+        food.setImage(base64Image);  // 把base64存入Food物件
+        imgbtn.setImageBitmap(decodeBase64ToBitmap(base64Image));  // 更新 ImageButton 顯示
+
+        adapter.notifyDataSetChanged(); // 或是notifyItemChanged，視情況
+    }
+
+    private String encodeImageToDataUrl(Uri imageUri) throws IOException {
+        // 讀取圖片輸入流
+        InputStream inputStream = requireContext().getContentResolver().openInputStream(imageUri);
+        Bitmap originalBitmap = BitmapFactory.decodeStream(inputStream);
+
+        // 步驟一：縮小圖片（最多寬或高為800px）
+        Bitmap resizedBitmap = resizeBitmap(originalBitmap, 800);
+
+        // 步驟二：壓縮圖片為 JPEG（壓縮品質 70%）
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
+        byte[] byteArray = outputStream.toByteArray();
+
+        // 步驟三：取得 mimeType 並組成 Data URL
+        String mimeType = requireContext().getContentResolver().getType(imageUri);
+        String base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+        return "data:" + mimeType + ";base64," + base64;
+    }
+
+    private Bitmap resizeBitmap(Bitmap bitmap, int maxSize) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        float scale = Math.min((float) maxSize / width, (float) maxSize / height);
+        if (scale >= 1) return bitmap; // 如果太小，不需縮放
+
+        int newWidth = Math.round(scale * width);
+        int newHeight = Math.round(scale * height);
+        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
     }
 }

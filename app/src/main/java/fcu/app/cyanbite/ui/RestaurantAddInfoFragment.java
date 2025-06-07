@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import fcu.app.cyanbite.R;
+import fcu.app.cyanbite.model.Food;
 import fcu.app.cyanbite.model.Restaurant;
 
 /**
@@ -34,7 +35,7 @@ import fcu.app.cyanbite.model.Restaurant;
  * Use the {@link RestaurantAddInfoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RestaurantAddInfoFragment extends Fragment {
+public class RestaurantAddInfoFragment extends Fragment implements ImageSelectListener  {
 
     private OnTabSwitchListener callback;
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -49,11 +50,15 @@ public class RestaurantAddInfoFragment extends Fragment {
     private String mParam2;
 
     private Restaurant restaurant;
+    private String restaurantImageBase64;
 
     public RestaurantAddInfoFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onSelectImageRequested(Food food, ImageButton imageButton) {
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -108,6 +113,16 @@ public class RestaurantAddInfoFragment extends Fragment {
 
         Button btnToSecond = view.findViewById(R.id.btn_next);
         btnToSecond.setOnClickListener(v -> {
+            String name = etName.getText().toString().trim();
+            String phone = etPhone.getText().toString().trim();
+            String location = etLocation.getText().toString().trim();
+
+            // 假設你用這個變數保存圖片 base64 資料
+            if (name.isEmpty() || phone.isEmpty() || location.isEmpty() || restaurantImageBase64 == null) {
+                Toast.makeText(getContext(), "請完整填寫所有欄位並選擇圖片", Toast.LENGTH_SHORT).show();
+                return; // 有缺就不繼續
+            }
+
             if (restaurant != null) {
                 restaurant.setName(etName.getText().toString());
                 restaurant.setPhone(etPhone.getText().toString());
@@ -140,7 +155,9 @@ public class RestaurantAddInfoFragment extends Fragment {
                 ImageButton imgbtn = getView().findViewById(R.id.img_btn_restaurant);
                 imgbtn.setImageBitmap(bitmap);  // 將選擇的圖片設置為 ImageButton 的圖片
 
+
                 String base64String = encodeImageToDataUrl(imageUri);
+                restaurantImageBase64 = base64String;
 
                 if (restaurant != null) {
                     restaurant.setImage(base64String);  // 儲存到物件

@@ -33,6 +33,10 @@ public class Food implements Serializable {
         return price;
     }
 
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public int getImageResId() {
         return imageResId;
     }

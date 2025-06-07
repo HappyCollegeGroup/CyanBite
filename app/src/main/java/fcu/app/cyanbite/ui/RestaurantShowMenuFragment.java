@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast; // 導入 Toast
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import fcu.app.cyanbite.adapter.RestaurantMenuListAdapter;
 import fcu.app.cyanbite.model.Food;
 import fcu.app.cyanbite.model.Restaurant;
 
-public class RestaurantShowMenuFragment extends Fragment {
+public class RestaurantShowMenuFragment extends Fragment implements ImageSelectListener {
 
     private RecyclerView recyclerView;
     private RestaurantMenuListAdapter adapter;
@@ -32,6 +33,10 @@ public class RestaurantShowMenuFragment extends Fragment {
 
     public RestaurantShowMenuFragment() {
         // 需要一個空的建構子
+    }
+    @Override
+    public void onSelectImageRequested(Food food, ImageButton imageButton) {
+
     }
 
     @Override
@@ -84,7 +89,7 @@ public class RestaurantShowMenuFragment extends Fragment {
             foodList = new ArrayList<>();
         }
 
-        adapter = new RestaurantMenuListAdapter(requireContext(), foodList);
+        adapter = new RestaurantMenuListAdapter(requireContext(), foodList, this);
         recyclerView.setAdapter(adapter);
 
         return view;
