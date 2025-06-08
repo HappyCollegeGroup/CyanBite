@@ -1,8 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="8dp">
+    android:layout_height="wrap_content">
 
     <!-- 卡片區塊 -->
     <androidx.cardview.widget.CardView
@@ -12,7 +11,7 @@
         android:layout_margin="12dp"
         android:clipChildren="false"
         android:clipToPadding="false"
-        app:cardCornerRadius="16dp">
+        app:cardCornerRadius="4dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -43,7 +42,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="foodname"
-                    android:textSize="24sp" />
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <!-- 下方資訊列 -->
@@ -63,7 +62,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:text="groupname"
-                    android:textSize="20sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/tv_restaurant_name"
@@ -73,7 +72,7 @@
                     android:layout_marginEnd="4dp"
                     android:layout_weight="1"
                     android:text="restaurant name"
-                    android:textSize="20sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/tv_food_price"
@@ -82,7 +81,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:text="foodprice"
-                    android:textSize="20sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -91,13 +90,13 @@
     <!-- 懸浮刪除按鈕 -->
     <ImageButton
         android:id="@+id/btn_delete"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_gravity="end|top"
         android:layout_margin="4dp"
         android:background="@drawable/bg_round_red"
         android:contentDescription="刪除"
-        android:elevation="8dp"
+        android:elevation="2dp"
         android:scaleType="center"
         android:src="@drawable/delete"
         app:tint="@color/white" />
