@@ -68,6 +68,7 @@ public class PlaceSelectionActivity extends AppCompatActivity {
                             double lat = address.getLatitude();
                             double lng = address.getLongitude();
                             initLatLng = new LatLng(lat, lng);
+                            setMarker(initLatLng);
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -75,41 +76,9 @@ public class PlaceSelectionActivity extends AppCompatActivity {
                 }
 
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initLatLng, 16));
-                marker = googleMap.addMarker(new MarkerOptions().position(initLatLng).title("選擇的位置"));
+//                marker = googleMap.addMarker(new MarkerOptions().position(initLatLng).title("選擇的位置"));
                 googleMap.setOnMapClickListener(latLng -> {
-                    try {
-                        if (marker != null) {
-                            marker.remove();
-                        }
-                        marker = googleMap.addMarker(new MarkerOptions().position(latLng).title("選擇的位置"));
-
-                        Geocoder geocoder = new Geocoder(PlaceSelectionActivity.this, new Locale("zh", "TW"));
-                        List<Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
-
-                        if (addresses != null && !addresses.isEmpty()) {
-                            Address address = addresses.get(0);
-
-                            city = address.getAdminArea();                 // 市
-                            district = address.getSubAdminArea();          // 區
-                            road = address.getThoroughfare();              // 路
-                            number = address.getSubThoroughfare();         // 號碼
-
-                            result = "";
-                            if (city != null) result += city;
-                            if (district != null) result += district;
-                            if (road != null) result += road;
-                            if (number != null) result += number;
-                        } else {
-                            result = "";
-                            city = null;
-                            district = null;
-                            road = null;
-                            number = null;
-                        }
-                        Toast.makeText(PlaceSelectionActivity.this, result, Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    setMarker(latLng);
                 });
             }
         });
@@ -134,6 +103,42 @@ public class PlaceSelectionActivity extends AppCompatActivity {
         btnReturn.setOnClickListener(view -> {
             finish();
         });
+    }
+
+    private void setMarker(LatLng latLng) {
+        try {
+            if (marker != null) {
+                marker.remove();
+            }
+            marker = googleMap.addMarker(new MarkerOptions().position(latLng).title("選擇的位置"));
+
+            Geocoder geocoder = new Geocoder(PlaceSelectionActivity.this, new Locale("zh", "TW"));
+            List<Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+
+            if (addresses != null && !addresses.isEmpty()) {
+                Address address = addresses.get(0);
+
+                city = address.getAdminArea();                 // 市
+                district = address.getSubAdminArea();          // 區
+                road = address.getThoroughfare();              // 路
+                number = address.getSubThoroughfare();         // 號碼
+
+                result = "";
+                if (city != null) result += city;
+                if (district != null) result += district;
+                if (road != null) result += road;
+                if (number != null) result += number;
+            } else {
+                result = "";
+                city = null;
+                district = null;
+                road = null;
+                number = null;
+            }
+            Toast.makeText(PlaceSelectionActivity.this, result, Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // 以下為 MapView 生命週期方法
