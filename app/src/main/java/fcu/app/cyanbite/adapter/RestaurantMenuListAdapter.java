@@ -104,10 +104,10 @@ public class RestaurantMenuListAdapter extends RecyclerView.Adapter {
         if (food != null) {
             etName.setText(food.getName());
             etPrice.setText(String.valueOf(food.getPrice()));
-            imgbtn.setImageBitmap(currentbitmap);
+            imgbtn.setImageBitmap(food.getImageBitmap());
 
             btnCancel.setText("刪除");
-            btnCancel.setBackgroundColor(context.getColor(android.R.color.holo_red_light));
+//            btnCancel.setBackgroundColor(context.getColor(android.R.color.holo_red_light));
             btnCancel.setOnClickListener(v -> {
                 int index = foodList.indexOf(food);
                 if (index >= 0) {
@@ -119,7 +119,7 @@ public class RestaurantMenuListAdapter extends RecyclerView.Adapter {
             });
         } else {
             btnCancel.setText("取消");
-            btnCancel.setBackgroundColor(context.getColor(android.R.color.darker_gray));
+//            btnCancel.setBackgroundColor(context.getColor(android.R.color.darker_gray));
             btnCancel.setOnClickListener(v -> {
                 currentBottomSheetDialog.dismiss();
                 clearCurrentEditing();

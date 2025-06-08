@@ -3,15 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <ImageButton
         android:id="@+id/img_btn_food"
         android:layout_width="178dp"
         android:layout_height="137dp"
         android:layout_marginTop="16dp"
+        android:background="@color/white"
         android:scaleType="fitCenter"
-        android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -28,72 +29,141 @@
         app:layout_constraintStart_toStartOf="@+id/img_btn_food"
         app:layout_constraintTop_toBottomOf="@+id/img_btn_food" />
 
+<!--    <TextView-->
+<!--        android:id="@+id/textView15"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="24dp"-->
+<!--        android:text="餐點名稱"-->
+<!--        android:textSize="24sp"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/et_food_name"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textView6" />-->
+
     <TextView
         android:id="@+id/textView15"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="餐點名稱"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="@+id/et_food_name"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
-
-    <EditText
-        android:id="@+id/et_food_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
-        android:ems="10"
-        android:inputType="text"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:text="餐點名稱"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView15" />
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+<!--    <EditText-->
+<!--        android:id="@+id/et_food_name"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="24dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginEnd="24dp"-->
+<!--        android:ems="10"-->
+<!--        android:inputType="text"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textView15" />-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="4dp"
+        app:boxCornerRadiusBottomStart="4dp"
+        app:boxCornerRadiusTopEnd="4dp"
+        app:boxCornerRadiusTopStart="4dp"
+        app:layout_constraintEnd_toEndOf="@+id/textView15"
+        app:layout_constraintStart_toStartOf="@+id/textView15"
+        app:layout_constraintTop_toBottomOf="@+id/textView15">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_food_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+<!--    <TextView-->
+<!--        android:id="@+id/textView16"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="價格"-->
+<!--        android:textSize="24sp"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/et_food_name"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/et_food_name" />-->
 
     <TextView
         android:id="@+id/textView16"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="價格"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="@+id/et_food_name"
-        app:layout_constraintTop_toBottomOf="@+id/et_food_name" />
-
-    <EditText
-        android:id="@+id/et_food_price"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:inputType="number"
-        app:layout_constraintEnd_toEndOf="@+id/et_food_name"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="0dp"
+        android:text="價格"
+        app:layout_constraintEnd_toEndOf="@+id/til_name"
+        app:layout_constraintStart_toStartOf="@+id/til_name"
+        app:layout_constraintTop_toBottomOf="@+id/til_name" />
+
+<!--    <EditText-->
+<!--        android:id="@+id/et_food_price"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:ems="10"-->
+<!--        android:inputType="number"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/et_food_name"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/textView16"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textView16" />-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="4dp"
+        app:boxCornerRadiusBottomStart="4dp"
+        app:boxCornerRadiusTopEnd="4dp"
+        app:boxCornerRadiusTopStart="4dp"
+        app:layout_constraintEnd_toEndOf="@+id/textView16"
         app:layout_constraintStart_toStartOf="@+id/textView16"
-        app:layout_constraintTop_toBottomOf="@+id/textView16" />
+        app:layout_constraintTop_toBottomOf="@+id/textView16">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_food_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_save"
-        style="@android:style/Widget.Button"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="24dp"
         android:text="送出"
         android:textColor="#ffffff"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        app:cornerRadius="4dp"
         app:backgroundTint="@color/cyan"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_food_price" />
+        app:layout_constraintTop_toBottomOf="@+id/til_price" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_cancel"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
         android:text="取消"
-        android:textColor="#FFFFFF"
-        app:backgroundTint="#FF0000"
-        app:cornerRadius="0dp"
+        android:textColor="@color/cyan"
+        app:cornerRadius="4dp"
         app:layout_constraintEnd_toStartOf="@+id/btn_save"
         app:layout_constraintTop_toTopOf="@+id/btn_save" />
 
