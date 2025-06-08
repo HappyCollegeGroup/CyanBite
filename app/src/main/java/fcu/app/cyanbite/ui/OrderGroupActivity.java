@@ -105,7 +105,7 @@ public class OrderGroupActivity extends AppCompatActivity {
             }
         };
         recyclerView.setLayoutManager(gridLayoutManager);
-        adapter = new OrderFoodListAdapter(this, restaurantList);
+        adapter = new OrderFoodListAdapter(this, name, restaurantList);
         recyclerView.setAdapter(adapter);
     }
 }

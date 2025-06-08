@@ -10,13 +10,16 @@
     android:layout_marginBottom="7.5dp"
     android:clipChildren="true"
     android:clipToPadding="true"
+    android:background="@color/white"
     app:cardCornerRadius="8dp"
     app:strokeColor="#33000000"
     app:strokeWidth="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp">
 
         <ImageView
             android:id="@+id/img_restaurant"

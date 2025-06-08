@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -44,6 +45,8 @@ public class RestaurantFragment extends Fragment {
     private String mParam2;
 
     private FirebaseFirestore db;
+    private List<Restaurant> restaurantList = new ArrayList<>();
+    private RestaurantAdapter adapter;
 
     public RestaurantFragment() {
         // Required empty public constructor
@@ -81,16 +84,7 @@ public class RestaurantFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_restaurant, container, false);
 
-        Button btnShoppingCart = view.findViewById(R.id.btn_shopping_cart);
-        btnShoppingCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ShoppingCartActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        Button btnAddRestaurant = view.findViewById(R.id.btn_next);
+        FloatingActionButton btnAddRestaurant = view.findViewById(R.id.btn_next);
         btnAddRestaurant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,13 +93,12 @@ public class RestaurantFragment extends Fragment {
             }
         });
 
-        List<Restaurant> restaurantList = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
 
         // 綁定 RecyclerView
         RecyclerView recyclerView = view.findViewById(R.id.rv_restaurant_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        RestaurantAdapter adapter = new RestaurantAdapter(restaurantList, new RestaurantAdapter.OnItemClickListener() {
+        adapter = new RestaurantAdapter(restaurantList, new RestaurantAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Restaurant restaurant) {
                 Intent intent = new Intent(getActivity(), RestaurantManageActivity.class);
@@ -115,6 +108,18 @@ public class RestaurantFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
 
+        loadData();
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        loadData();
+    }
+
+    private void loadData() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String userUid = user.getUid();
         db.collection("restaurant")
@@ -122,6 +127,8 @@ public class RestaurantFragment extends Fragment {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
+                        restaurantList.clear();
+
                         for (QueryDocumentSnapshot doc : task.getResult()) {
                             String id = doc.getId();
                             String name = doc.getString("name");
@@ -144,7 +151,5 @@ public class RestaurantFragment extends Fragment {
                         adapter.notifyDataSetChanged();
                     }
                 });
-
-        return view;
     }
 }

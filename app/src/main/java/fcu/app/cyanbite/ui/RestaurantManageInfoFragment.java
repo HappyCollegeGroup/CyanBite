@@ -1,5 +1,7 @@
 package fcu.app.cyanbite.ui;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +10,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -47,6 +51,7 @@ public class RestaurantManageInfoFragment extends Fragment {
     private String mParam2;
 
     private Restaurant restaurant;
+    private EditText etLocation;
 
     public RestaurantManageInfoFragment() {
         // Required empty public constructor
@@ -81,6 +86,14 @@ public class RestaurantManageInfoFragment extends Fragment {
         }
     }
 
+    private final ActivityResultLauncher<Intent> activityResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    String address = result.getData().getStringExtra("address");
+                    etLocation.setText(address);
+                }
+            });
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -91,8 +104,14 @@ public class RestaurantManageInfoFragment extends Fragment {
         // 2. 找元件
         EditText etName = view.findViewById(R.id.et_name);
         EditText etPhone = view.findViewById(R.id.et_phone);
-        EditText etLocation = view.findViewById(R.id.et_location);
+        etLocation = view.findViewById(R.id.et_location);
         ImageButton imgButton = view.findViewById(R.id.img_btn_restaurant);
+
+        etLocation.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), PlaceSelectionActivity.class);
+            intent.putExtra("initial_address", String.valueOf(etLocation.getText()));
+            activityResultLauncher.launch(intent);
+        });
 
         if (bundle != null) {
             restaurant = (Restaurant) bundle.getSerializable("restaurant_data");

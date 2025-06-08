@@ -28,14 +28,17 @@ import java.util.Map;
 
 import fcu.app.cyanbite.R;
 import fcu.app.cyanbite.model.Food;
+import fcu.app.cyanbite.model.Group;
 import fcu.app.cyanbite.model.Restaurant;
 
 public class OrderFoodListAdapter extends RecyclerView.Adapter<OrderFoodListAdapter.ViewHolder> {
     private Context context;
     private List<Restaurant> restaurantList;
+    private String group;
 
-    public OrderFoodListAdapter(Context context, List<Restaurant> restaurantList) {
+    public OrderFoodListAdapter(Context context, String group, List<Restaurant> restaurantList) {
         this.context = context;
+        this.group = group;
         this.restaurantList = restaurantList;
     }
 
@@ -91,6 +94,9 @@ public class OrderFoodListAdapter extends RecyclerView.Adapter<OrderFoodListAdap
                             order.put("uid", user.getUid());
                             order.put("restaurant", finalRestaurant.getName());
                             order.put("food", food.getName());
+                            order.put("group", group);
+                            order.put("price", food.getPrice());
+                            order.put("image", food.getImage());
                             order.put("time", FieldValue.serverTimestamp());
 
                             db.collection("order")

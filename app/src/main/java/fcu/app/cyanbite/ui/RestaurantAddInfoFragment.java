@@ -1,5 +1,7 @@
 package fcu.app.cyanbite.ui;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +10,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -51,6 +55,7 @@ public class RestaurantAddInfoFragment extends Fragment implements ImageSelectLi
 
     private Restaurant restaurant;
     private String restaurantImageBase64;
+    private EditText etLocation;
 
     public RestaurantAddInfoFragment() {
         // Required empty public constructor
@@ -88,6 +93,14 @@ public class RestaurantAddInfoFragment extends Fragment implements ImageSelectLi
         }
     }
 
+    private final ActivityResultLauncher<Intent> activityResultLauncher =
+        registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                String address = result.getData().getStringExtra("address");
+                etLocation.setText(address);
+            }
+        });
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -99,7 +112,13 @@ public class RestaurantAddInfoFragment extends Fragment implements ImageSelectLi
         // 2. 找元件
         EditText etName = view.findViewById(R.id.et_food_name);
         EditText etPhone = view.findViewById(R.id.et_phone);
-        EditText etLocation = view.findViewById(R.id.et_location);
+        etLocation = view.findViewById(R.id.et_location);
+
+        etLocation.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), PlaceSelectionActivity.class);
+            intent.putExtra("initial_address", String.valueOf(etLocation.getText()));
+            activityResultLauncher.launch(intent);
+        });
 
         if (bundle != null) {
             restaurant = (Restaurant) bundle.getSerializable("restaurant_new_data");
@@ -148,7 +167,7 @@ public class RestaurantAddInfoFragment extends Fragment implements ImageSelectLi
         super.onActivityResult(requestCode, resultCode, data);
 
         // 確認請求碼與結果
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
             Uri imageUri = data.getData();  // 取得選擇的圖片 URI
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);

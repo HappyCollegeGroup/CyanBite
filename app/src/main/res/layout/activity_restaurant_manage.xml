@@ -7,41 +7,49 @@
     android:layout_height="match_parent"
     tools:context=".ui.RestaurantManageActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+    <View
+        android:id="@+id/bottom_border6"
         android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:background="@color/cyan"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:titleTextColor="@color/white">
+        app:layout_constraintTop_toBottomOf="@+id/topAppBar" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/white"
+        android:paddingTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/tv_fragment_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:text="CyanBite"
-            android:textColor="@color/white"
+            android:text="管理餐廳"
+            android:textColor="@color/black"
             android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btn_return"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_return"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:padding="0dp"
+            app:icon="@drawable/arrow_back"
+            app:iconTint="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textView11"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:text="管理餐廳"
-            android:textColor="@color/white"
-            android:textSize="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.515" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
@@ -51,7 +59,7 @@
         android:background="#80E0F7FA"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+        app:layout_constraintTop_toBottomOf="@+id/topAppBar">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -64,11 +72,11 @@
                 android:id="@+id/tv_info_number"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:background="@drawable/circle_filled"
                 android:gravity="center"
                 android:text="1"
-                android:textSize="16sp"
                 android:textColor="#FFFFFF"
-                android:background="@drawable/circle_filled" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tv_info"
@@ -92,11 +100,11 @@
                 android:id="@+id/tv_menu_number"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:background="@drawable/circle_border"
                 android:gravity="center"
                 android:text="2"
-                android:textSize="16sp"
-                android:background="@drawable/circle_border"
-                android:textColor="#000000"/>
+                android:textColor="#000000"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tv_menu"
@@ -113,7 +121,7 @@
     <FrameLayout
         android:id="@+id/fragment_manage_restaurant"
         android:layout_width="0dp"
-        android:layout_height="609dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

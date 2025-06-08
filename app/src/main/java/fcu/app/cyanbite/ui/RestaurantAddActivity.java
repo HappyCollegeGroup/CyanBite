@@ -2,6 +2,7 @@ package fcu.app.cyanbite.ui;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -75,10 +76,10 @@ public class RestaurantAddActivity extends AppCompatActivity implements OnTabSwi
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_restaurant_add);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+        Button btnReturn = findViewById(R.id.btn_return);
+        btnReturn.setOnClickListener(view ->  {
+            finish();
         });
 
         tvInfoNumber = findViewById(R.id.tv_info_number);

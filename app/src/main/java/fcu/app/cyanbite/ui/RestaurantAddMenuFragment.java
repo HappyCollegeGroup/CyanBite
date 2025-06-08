@@ -142,7 +142,7 @@ public class RestaurantAddMenuFragment extends Fragment implements ImageSelectLi
 //                return; // 中斷送出流程
 //            }
 
-            Intent intent = new Intent(getActivity(), MainActivity.class);
+//            Intent intent = new Intent(getActivity(), MainActivity.class);
 
             restaurant.setFoodList(foodList);
 
@@ -184,7 +184,7 @@ public class RestaurantAddMenuFragment extends Fragment implements ImageSelectLi
                         Toast.makeText(getContext(), "更新失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
 
-            startActivity(intent);
+//            startActivity(intent);
             requireActivity().finish();
         });
 

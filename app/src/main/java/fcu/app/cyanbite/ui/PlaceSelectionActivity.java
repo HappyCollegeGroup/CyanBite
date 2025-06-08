@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import fcu.app.cyanbite.R;
 
@@ -57,7 +58,7 @@ public class PlaceSelectionActivity extends AppCompatActivity {
             public void onMapReady(@NonNull GoogleMap map) {
                 googleMap = map;
                 LatLng initLatLng = new LatLng(24.179261330095628, 120.64925653126724);
-                if (initialAddress != null) {
+                if (!Objects.equals(initialAddress, "")) {
                     try {
                         Geocoder geocoder = new Geocoder(PlaceSelectionActivity.this, new Locale("zh", "TW"));
                         List<Address> addresses = null;

@@ -3,6 +3,7 @@
         <item name="colorPrimary">@color/cyan</item>
         <item name="colorAccent">@color/cyan</item>
         <item name="colorPrimaryVariant">@color/cyan</item>
+        <item name="android:windowBackground">@color/white</item>
     </style>
 
     <style name="AppTheme.Launcher" parent="Theme.SplashScreen">

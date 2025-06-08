@@ -184,8 +184,8 @@ public class RestaurantManageMenuFragment extends Fragment implements ImageSelec
                     });
 
 
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            startActivity(intent);
+//            Intent intent = new Intent(getActivity(), MainActivity.class);
+//            startActivity(intent);
             getActivity().finish();
         });
 

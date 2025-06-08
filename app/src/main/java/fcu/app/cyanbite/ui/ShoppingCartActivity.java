@@ -1,6 +1,7 @@
 package fcu.app.cyanbite.ui;
 
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -44,10 +45,10 @@ public class ShoppingCartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_shopping_cart);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+        Button btnReturn = findViewById(R.id.btn_return);
+        btnReturn.setOnClickListener(view ->  {
+            finish();
         });
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -71,6 +72,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                 String food = doc.getString("food");
                                 String group = doc.getString("group");
                                 String restaurant = doc.getString("restaurant");
+                                String imgFood = doc.getString("image");
                                 Timestamp timestamp = doc.getTimestamp("time");
                                 String timeString = "";  // 預設空字串，避免 null
 
@@ -81,7 +83,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                 }
                                 String uid = doc.getString("uid");
 
-                                orderList.add(new Order(id, food, group, restaurant, timeString, uid, 100, ""));
+                                orderList.add(new Order(id, food, group, restaurant, timeString, uid, 100, imgFood));
                             }
                             Collections.sort(orderList, (o1, o2) -> o2.getTime().compareTo(o1.getTime()));
                             adapter.notifyDataSetChanged();
