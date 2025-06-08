@@ -11,14 +11,22 @@ public class Order {
     private String time;
     private String uid;
     private String image;
+    private int price;
+    private String id;
 
-    public Order(String food, String group, String restaurant, String time, String uid, String image) {
+    public Order(String id, String food, String group, String restaurant, String time, String uid, int price, String image) {
+        this.id = id;
         this.food = food;
         this.group = group;
         this.restaurant = restaurant;
         this.time = time;
         this.uid = uid;
         this.image = image;
+        this.price = price;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public Bitmap getImageBitmap() {
@@ -41,6 +49,14 @@ public class Order {
         }
 
         return bitmap;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public String getImage() {

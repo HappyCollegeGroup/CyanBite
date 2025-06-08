@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,9 +24,20 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         this.orderList = orderList;
     }
 
+    public interface OnDeleteClickListener {
+        void onDeleteClick(Order order, int position);
+    }
+
+    private OnDeleteClickListener deleteClickListener;
+
+    public void setOnDeleteClickListener(OnDeleteClickListener listener) {
+        this.deleteClickListener = listener;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imgFood;
         TextView tvFoodName, tvGroupName, tvRestaurantName, tvFoodPrice;
+        ImageButton btnDelete;
 
         public ViewHolder(View view) {
             super(view);
@@ -34,6 +46,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             tvGroupName = view.findViewById(R.id.tv_group_name);
             tvRestaurantName = view.findViewById(R.id.tv_restaurant_name);
             tvFoodPrice = view.findViewById(R.id.tv_food_price);
+            btnDelete = view.findViewById(R.id.btn_delete);
         }
     }
 
@@ -52,14 +65,20 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         holder.tvFoodName.setText(order.getFood());
         holder.tvGroupName.setText(order.getGroup());
         holder.tvRestaurantName.setText(order.getRestaurant());
-        holder.tvFoodPrice.setText("Time: " + order.getTime());
+        holder.tvFoodPrice.setText("NT$" + order.getPrice());
 
         Bitmap bitmap = order.getImageBitmap();
         if (bitmap != null) {
             holder.imgFood.setImageBitmap(bitmap);
         } else {
-            holder.imgFood.setImageResource(R.drawable.breakfast); // 預設圖
+            holder.imgFood.setImageResource(R.drawable.breakfast);
         }
+
+        holder.btnDelete.setOnClickListener(v -> {
+            if (deleteClickListener != null) {
+                deleteClickListener.onDeleteClick(order, position);
+            }
+        });
     }
 
     @Override
