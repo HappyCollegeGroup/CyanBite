@@ -174,7 +174,7 @@ public class GroupDetailActivity extends AppCompatActivity {
             }
 
             // Find the current group document in Firestore using its original name
-            db.collection("groups")
+            db.collection("group")
                     .whereEqualTo("name", originalGroupName)
                     .limit(1)
                     .get()
@@ -226,11 +226,11 @@ public class GroupDetailActivity extends AppCompatActivity {
                     });
         });
 
-        // --- Delete Button Logic ---
+
         Button btnDelete = findViewById(R.id.btn_delete);
         btnDelete.setOnClickListener(v -> {
             // Find the group document by its original name to get its ID for deletion
-            db.collection("groups")
+            db.collection("group")
                     .whereEqualTo("name", originalGroupName)
                     .limit(1)
                     .get()
@@ -255,9 +255,16 @@ public class GroupDetailActivity extends AppCompatActivity {
                         Toast.makeText(this, "查詢群組失敗，無法執行刪除：" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
         });
+
+
+        Button btnShowList = findViewById(R.id.btn_list);
+        btnShowList.setOnClickListener(v -> {
+            Intent intent = new Intent(GroupDetailActivity.this, GroupShowBuyerActivity.class);
+            intent.putExtra("name", originalGroupName);
+            startActivity(intent);
+        });
     }
 
-    // --- Image Handling Methods ---
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -281,13 +288,7 @@ public class GroupDetailActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Encodes a Bitmap from a given Uri into a Base64 Data URL string.
-     * The image is resized to a maximum dimension (e.g., 800px) and compressed.
-     * @param imageUri The URI of the image to encode.
-     * @return The Base64 encoded Data URL string.
-     * @throws IOException If there's an error reading the image from the URI.
-     */
+
     private String encodeImageToDataUrl(Uri imageUri) throws IOException {
         InputStream inputStream = getContentResolver().openInputStream(imageUri);
         Bitmap originalBitmap = BitmapFactory.decodeStream(inputStream); // Decode the original bitmap
@@ -303,11 +304,7 @@ public class GroupDetailActivity extends AppCompatActivity {
         return "data:" + mimeType + ";base64," + Base64.encodeToString(byteArray, Base64.NO_WRAP);
     }
 
-    /**
-     * Decodes a Base64 Data URL string back into a Bitmap.
-     * @param dataUrl The Base64 Data URL string (e.g., "data:image/jpeg;base64,...").
-     * @return The decoded Bitmap, or null if decoding fails.
-     */
+
     private Bitmap decodeImageFromDataUrl(String dataUrl) {
         // Find the index of the comma, which separates the metadata from the actual Base64 data
         int commaIndex = dataUrl.indexOf(',');
@@ -324,12 +321,7 @@ public class GroupDetailActivity extends AppCompatActivity {
         return null; // Return null if data URL format is incorrect
     }
 
-    /**
-     * Resizes a given Bitmap to fit within a maximum dimension while maintaining aspect ratio.
-     * @param bitmap The original Bitmap.
-     * @param maxSize The maximum width or height the Bitmap should have.
-     * @return The resized Bitmap, or the original if no resizing is needed.
-     */
+
     private Bitmap resizeBitmap(Bitmap bitmap, int maxSize) {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
@@ -342,23 +334,7 @@ public class GroupDetailActivity extends AppCompatActivity {
         return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true); // Create a new scaled bitmap
     }
 
-    // --- End of Image Handling Methods ---
 
-    /**
-     * Updates a group document in Firestore with the new details.
-     *
-     * @param docId The document ID of the group to update.
-     * @param newName The new name for the group.
-     * @param newPhone The new phone number.
-     * @param newLocation The new location.
-     * @param newOrderingTime The new ordering time.
-     * @param newCollectionTime The new collection time.
-     * @param newCity The new city.
-     * @param newDistrict The new district.
-     * @param newDescription The new description.
-     * @param newGroupImageBase64 The new Base64 encoded image string.
-     * @param newRestaurantReferences A list of DocumentReferences to associated restaurants.
-     */
     private void updateGroup(String docId, String newName, String newPhone, String newLocation,
                              String newOrderingTime, String newCollectionTime, String newCity, String newDistrict,
                              String newDescription, String newGroupImageBase64,
@@ -377,7 +353,7 @@ public class GroupDetailActivity extends AppCompatActivity {
         updates.put("restaurant", newRestaurantReferences); // Update restaurant references list
 
         // Perform the update operation on the specific document in Firestore
-        db.collection("groups").document(docId)
+        db.collection("group").document(docId)
                 .update(updates)
                 .addOnSuccessListener(unused -> {
                     Toast.makeText(this, "更新成功", Toast.LENGTH_SHORT).show();

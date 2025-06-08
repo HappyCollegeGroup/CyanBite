@@ -28,6 +28,15 @@
             android:background="@android:color/transparent"
             android:src="@drawable/camera" />
 
+        <Button
+            android:id="@+id/btn_list"
+            style="@android:style/Widget.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="訂購人列表"
+            android:textColor="@color/white"
+            android:layout_marginTop="32dp" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

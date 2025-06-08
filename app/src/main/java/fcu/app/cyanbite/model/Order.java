@@ -25,6 +25,10 @@ public class Order {
         this.price = price;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getId() {
         return id;
     }

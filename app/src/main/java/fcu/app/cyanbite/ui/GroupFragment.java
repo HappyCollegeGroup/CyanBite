@@ -138,7 +138,7 @@ public class GroupFragment extends Fragment {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String currentUserId = currentUser.getUid();
 
-        db.collection("groups")
+        db.collection("group")
                 .whereEqualTo("uid", currentUserId)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -162,7 +162,7 @@ public class GroupFragment extends Fragment {
             public void onItemClick(GroupName group) {
                 String groupName = group.getGroupName();
 
-                db.collection("groups")
+                db.collection("group")
                         .whereEqualTo("name", groupName)
                         .limit(1)
                         .get()

@@ -233,7 +233,7 @@ public class AddNewGroupRestaurantFragment extends Fragment {
                 return;
             }
 
-            String uid = db.collection("groups").document().getId(); // Generate new document ID
+            String uid = db.collection("group").document().getId(); // Generate new document ID
 
             Map<String, Object> group = new HashMap<>();
             group.put("name", groupName);
@@ -267,7 +267,7 @@ public class AddNewGroupRestaurantFragment extends Fragment {
 
             Log.d(TAG, "Attempting to submit group data: " + group.toString());
 
-            db.collection("groups").document(uid).set(group)
+            db.collection("group").document(uid).set(group)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(getActivity(), "團購資料已提交！", Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "Group data submitted successfully! Group ID: " + uid);
