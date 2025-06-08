@@ -49,6 +49,22 @@ public class SearchActivity extends AppCompatActivity {
         btnReturn = findViewById(R.id.btn_return);
         etSearch = findViewById(R.id.et_search);
         rvSearch = findViewById(R.id.rv_search);
+
+        db.collection("group")
+                .whereArrayContains("searchKeywords", "")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    resultList.clear();
+                    List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
+                    for (int j = 0; j < docs.size(); j++) {
+                        DocumentSnapshot doc = docs.get(j);
+                        String name = doc.getString("name");
+                        String description = doc.getString("description");
+                        String image = doc.getString("image");
+                        resultList.add(new Group(name, description, "", "", "", "", null, image));
+                    }
+                    resultAdapter.notifyDataSetChanged();
+                });
     }
 
     private void setupListener() {

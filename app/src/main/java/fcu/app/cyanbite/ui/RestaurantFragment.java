@@ -1,5 +1,7 @@
 package fcu.app.cyanbite.ui;
 
+import static fcu.app.cyanbite.util.Util.setStatusBar;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -115,7 +117,7 @@ public class RestaurantFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
+        setStatusBar(getActivity(), true);
         loadData();
     }
 

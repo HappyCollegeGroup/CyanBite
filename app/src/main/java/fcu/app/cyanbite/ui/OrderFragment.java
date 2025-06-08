@@ -196,25 +196,45 @@ public class OrderFragment extends Fragment {
     }
 
     private void findGroupData(String tag, List<Group> list, OrderGroupListAdapter adapter, int limit) {
-        db.collection("group")
-                .whereArrayContains("tag", tag)
-                .whereEqualTo("city", city)
-                .whereEqualTo("district", district)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    list.clear();
-                    List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
+        if (city != null && district != null) {
+            db.collection("group")
+                    .whereArrayContains("tag", tag)
+                    .whereEqualTo("city", city)
+                    .whereEqualTo("district", district)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        list.clear();
+                        List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
 
-                    Collections.shuffle(docs);
-                    for (int i = 0; i < Math.min(limit, docs.size()); i++) {
-                        DocumentSnapshot doc = docs.get(i);
-                        String name = doc.getString("name");
-                        String description = doc.getString("description");
-                        String image = doc.getString("image");
-                        list.add(new Group(name, description, "", "", "", "", null, image));
-                    }
-                    adapter.notifyDataSetChanged();
-                });
+                        Collections.shuffle(docs);
+                        for (int i = 0; i < Math.min(limit, docs.size()); i++) {
+                            DocumentSnapshot doc = docs.get(i);
+                            String name = doc.getString("name");
+                            String description = doc.getString("description");
+                            String image = doc.getString("image");
+                            list.add(new Group(name, description, "", "", "", "", null, image));
+                        }
+                        adapter.notifyDataSetChanged();
+                    });
+        } else {
+            db.collection("group")
+                    .whereArrayContains("tag", tag)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        list.clear();
+                        List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
+
+                        Collections.shuffle(docs);
+                        for (int i = 0; i < Math.min(limit, docs.size()); i++) {
+                            DocumentSnapshot doc = docs.get(i);
+                            String name = doc.getString("name");
+                            String description = doc.getString("description");
+                            String image = doc.getString("image");
+                            list.add(new Group(name, description, "", "", "", "", null, image));
+                        }
+                        adapter.notifyDataSetChanged();
+                    });
+        }
     }
 
     private void loadProfile() {
