@@ -83,7 +83,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                 }
                                 String uid = doc.getString("uid");
 
-                                orderList.add(new Order(id, food, group, restaurant, timeString, uid, 100, imgFood));
+//                                orderList.add(new Order(id, food, group, restaurant, timeString, uid, 100, imgFood));
+                                orderList.add(new Order(id, food, group, restaurant, timestamp, uid, 100, imgFood));
                             }
                             Collections.sort(orderList, (o1, o2) -> o2.getTime().compareTo(o1.getTime()));
                             adapter.notifyDataSetChanged();

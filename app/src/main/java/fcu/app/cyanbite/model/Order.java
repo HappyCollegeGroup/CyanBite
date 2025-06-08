@@ -4,17 +4,26 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 
-public class Order {
+import com.google.firebase.Timestamp;
+
+import java.io.Serializable;
+import java.sql.Time;
+
+public class Order implements Serializable {
     private String food;
     private String group;
     private String restaurant;
-    private String time;
+    private Timestamp time;
     private String uid;
     private String image;
     private int price;
     private String id;
 
-    public Order(String id, String food, String group, String restaurant, String time, String uid, int price, String image) {
+    public Order() {
+
+    }
+
+    public Order(String id, String food, String group, String restaurant, Timestamp time, String uid, int price, String image) {
         this.id = id;
         this.food = food;
         this.group = group;
@@ -95,11 +104,11 @@ public class Order {
         this.restaurant = restaurant;
     }
 
-    public String getTime() {
+    public Timestamp getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Timestamp time) {
         this.time = time;
     }
 

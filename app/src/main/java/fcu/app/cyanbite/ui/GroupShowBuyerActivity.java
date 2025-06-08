@@ -109,7 +109,7 @@ public class GroupShowBuyerActivity extends AppCompatActivity {
                                 }
 
 
-                                String buyerName = "購買人 (" + uid.substring(0, Math.min(uid.length(), 4)) + "...)";
+                                String buyerName = "(" + uid.substring(0, Math.min(uid.length(), 4)) + "...)";
                                 uidToNameMap.put(uid, buyerName); // Store or update the UID to name mapping
 
                                 // Create an OrderItem from the current Order
@@ -127,6 +127,8 @@ public class GroupShowBuyerActivity extends AppCompatActivity {
                                 Toast.makeText(GroupShowBuyerActivity.this, "載入部分訂單細項失敗。", Toast.LENGTH_SHORT).show();
                             }
                         }
+
+                        Log.d("hello", String.valueOf(buyerItemsMap.size()));
 
                         // After processing all individual 'Order' documents,
                         // aggregate them into 'BuyerOrder' objects
