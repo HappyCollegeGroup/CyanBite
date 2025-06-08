@@ -20,10 +20,19 @@
             android:gravity="center"
             android:layout_marginBottom="24dp" />
 
+        <ImageButton
+            android:id="@+id/img_btn_group_detail_pic"
+            android:layout_width="178dp"
+            android:layout_height="137dp"
+            android:scaleType="fitCenter"
+            android:background="@android:color/transparent"
+            android:src="@drawable/camera" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="團購名稱"
+            android:layout_marginTop="16dp"
             style="@style/Widget.MyApp.TextInputLayout" >
 
             <com.google.android.material.textfield.TextInputEditText

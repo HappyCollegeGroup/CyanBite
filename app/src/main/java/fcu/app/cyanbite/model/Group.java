@@ -20,7 +20,7 @@ public class Group implements Serializable {
     private String city;
     private String district;
 
-    public Group(String name, String phone, String city, String district, String description, String location, String orderingTime, String collectionTime, List<Restaurant> restaurantList, int imageResId) {
+    public Group(String name, String phone, String city, String district, String description, String location, String orderingTime, String collectionTime, String image, List<Restaurant> restaurantList, int imageResId) {
         this.name = name;
         this.phone = phone;
         this.city = city;
@@ -29,6 +29,7 @@ public class Group implements Serializable {
         this.location = location;
         this.orderingTime = orderingTime;
         this.collectionTime = collectionTime;
+        this.image = image;
         this.restaurantList = restaurantList;
         this.imageResId = imageResId;
     }
@@ -69,6 +70,30 @@ public class Group implements Serializable {
     public List<Restaurant> getRestaurantList() {
         return restaurantList;
     }
+
+    public Bitmap getImageBitmap() {
+        Bitmap bitmap = null;
+
+        // 去除開頭的 data URI（如果有）
+        if (image.contains(",")) {
+            image = image.substring(image.indexOf(",") + 1);
+        }
+
+        try {
+            byte[] decodedBytes = Base64.decode(image, Base64.DEFAULT);
+            bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+
+        return bitmap;
+    }
+
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
 
     public int getImageResId() {
         return imageResId;

@@ -139,7 +139,7 @@ public class GroupFragment extends Fragment {
         String currentUserId = currentUser.getUid();
 
         db.collection("groups")
-                .whereEqualTo("creatorId", currentUserId)
+                .whereEqualTo("uid", currentUserId)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     groupNameList.clear();
@@ -170,6 +170,7 @@ public class GroupFragment extends Fragment {
                             if (!querySnapshot.isEmpty()) {
                                 DocumentSnapshot doc = querySnapshot.getDocuments().get(0);
 
+                                String image = doc.getString("image");
                                 String phone = doc.getString("phone");
                                 String location = doc.getString("place");
                                 String orderingTime = doc.getString("orderTime");
@@ -189,6 +190,7 @@ public class GroupFragment extends Fragment {
                                 }
 
                                 Intent intent = new Intent(getActivity(), GroupDetailActivity.class);
+                                intent.putExtra("groupImage", image);
                                 intent.putExtra("groupName", groupName);
                                 intent.putExtra("groupPhone", phone);
                                 intent.putExtra("groupLocation", location);

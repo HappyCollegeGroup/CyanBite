@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,7 @@ import java.util.Map;
 import fcu.app.cyanbite.R;
 import fcu.app.cyanbite.adapter.RestaurantAdapter;
 import fcu.app.cyanbite.model.Food;
+import fcu.app.cyanbite.model.Group;
 import fcu.app.cyanbite.model.Restaurant;
 
 public class AddNewGroupRestaurantFragment extends Fragment {
@@ -44,6 +46,10 @@ public class AddNewGroupRestaurantFragment extends Fragment {
     private String groupCity;
     private String groupDistrict;
     private String groupDescription;
+    private String groupImageBase64;
+    private ArrayList<String> groupTags; // Declare ArrayList for tags
+    private ImageButton imgbtn;
+    private Group group;
 
     private OnGroupSwitchListener callback;
     private FirebaseFirestore db;
@@ -51,7 +57,7 @@ public class AddNewGroupRestaurantFragment extends Fragment {
 
     private List<String> selectedRestaurantIds = new ArrayList<>();
     private RestaurantAdapter adapter;
-    private List<Restaurant> allRestaurantList = new ArrayList<>(); // Used for getSelectedRestaurantsNames
+    private List<Restaurant> allRestaurantList = new ArrayList<>();
 
     public AddNewGroupRestaurantFragment() {}
 
@@ -81,15 +87,12 @@ public class AddNewGroupRestaurantFragment extends Fragment {
         RecyclerView rvRestaurantList = view.findViewById(R.id.rv_restaurant_list);
         rvRestaurantList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        // 初始化 adapter，使用 allRestaurantList
         adapter = new RestaurantAdapter(allRestaurantList, restaurant -> {
-            // 當點擊餐廳時，導航到 RestaurantShowInfoFragment
             Fragment fragment = new RestaurantShowInfoFragment();
             Bundle bundle = new Bundle();
             bundle.putSerializable("restaurant_data", restaurant);
             fragment.setArguments(bundle);
 
-            // 設置 Fragment 結果監聽器，用於從 RestaurantShowMenuFragment 接收選中的餐廳
             getParentFragmentManager().setFragmentResultListener(
                     "add_selected_restaurant", this,
                     (requestKey, result) -> {
@@ -97,10 +100,9 @@ public class AddNewGroupRestaurantFragment extends Fragment {
                         Restaurant selected = (Restaurant) result.getSerializable("selectedRestaurant");
                         if (selected != null) {
                             String id = selected.getId();
-                            if (!selectedRestaurantIds.contains(id)) { // 避免重複加入
+                            if (!selectedRestaurantIds.contains(id)) { // Avoid duplicates
                                 selectedRestaurantIds.add(id);
                                 Log.d(TAG, "Added restaurant ID: " + id + " to selected list.");
-                                // 更新 EditText 顯示選中的餐廳名稱
                                 etRestaurantName.setText(getSelectedRestaurantsNames(allRestaurantList));
                                 Log.d(TAG, "etRestaurantName updated to: " + etRestaurantName.getText().toString());
                             } else {
@@ -111,35 +113,44 @@ public class AddNewGroupRestaurantFragment extends Fragment {
                         }
                     });
 
-            // 執行 Fragment 替換，並將事務添加到回退棧，標籤為 "restaurant_info_tag"
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragmentContainerView, fragment)
-                    .addToBackStack("restaurant_info_tag") // <--- 添加這個標籤
+                    .addToBackStack("restaurant_info_tag")
                     .commit();
             Log.d(TAG, "Navigating to RestaurantShowInfoFragment.");
         });
 
         rvRestaurantList.setAdapter(adapter);
 
-        // 如果上個畫面已傳入餐廳 ID，就載入餐廳名稱
         if (prev != null) {
             String initialSelectedRestaurantId = prev.getString("selectedRestaurantId");
             if (initialSelectedRestaurantId != null && !selectedRestaurantIds.contains(initialSelectedRestaurantId)) {
-                selectedRestaurantIds.add(initialSelectedRestaurantId); // 將初始ID加入列表
+                selectedRestaurantIds.add(initialSelectedRestaurantId); // Add initial ID to the list
                 Log.d(TAG, "Initial selected restaurant ID from prev bundle: " + initialSelectedRestaurantId);
                 // The etRestaurantName will be updated after allRestaurantList is loaded from Firestore
+            }
+            groupImageBase64 = prev.getString("groupImage");
+            groupTags = prev.getStringArrayList("groupTags"); // Retrieve groupTags
+            if (groupImageBase64 != null) {
+                Log.d(TAG, "Group image base64 retrieved from prev bundle.");
+            } else {
+                Log.w(TAG, "Group image base64 is null in prev bundle.");
+            }
+            if (groupTags != null) {
+                Log.d(TAG, "Group tags retrieved from prev bundle: " + groupTags.toString());
+            } else {
+                Log.w(TAG, "Group tags is null in prev bundle.");
             }
         } else {
             Log.d(TAG, "Prev bundle is null.");
         }
 
-        // 從 Firestore 載入餐廳清單
         db.collection("restaurant")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        allRestaurantList.clear(); // 清空舊資料
+                        allRestaurantList.clear(); // Clear old data
                         for (QueryDocumentSnapshot doc : task.getResult()) {
                             String id = doc.getId();
                             String name = doc.getString("name");
@@ -159,10 +170,9 @@ public class AddNewGroupRestaurantFragment extends Fragment {
                             }
                             allRestaurantList.add(new Restaurant(id, name, phone, address, foodList, image));
                         }
-                        adapter.notifyDataSetChanged(); // 通知 Adapter 資料已更新
+                        adapter.notifyDataSetChanged(); // Notify Adapter data has changed
                         Log.d(TAG, "Restaurant list loaded from Firestore. Count: " + allRestaurantList.size());
 
-                        // 載入完畢後，如果之前有傳入初始選中ID，現在更新 EditText
                         if (prev != null && prev.getString("selectedRestaurantId") != null) {
                             etRestaurantName.setText(getSelectedRestaurantsNames(allRestaurantList));
                             Log.d(TAG, "Initial etRestaurantName update after list load: " + etRestaurantName.getText().toString());
@@ -174,7 +184,6 @@ public class AddNewGroupRestaurantFragment extends Fragment {
                     }
                 });
 
-        // 「提交團購」按鈕的點擊事件
         btnSubmitRestaurant.setOnClickListener(v -> {
             Log.d(TAG, "Submit button clicked.");
 
@@ -184,14 +193,12 @@ public class AddNewGroupRestaurantFragment extends Fragment {
                 return;
             }
 
-            // 確保 prev bundle 不是 null，且包含所有必要的群組資訊
             if (prev == null) {
                 Toast.makeText(getActivity(), "團購資訊不完整，請返回重新填寫", Toast.LENGTH_LONG).show();
                 Log.e(TAG, "Prev bundle is null. Group info missing.");
                 return;
             }
 
-            // 獲取團購基本資訊
             groupName = prev.getString("groupName");
             groupPhone = prev.getString("groupPhone");
             groupLocation = prev.getString("groupLocation");
@@ -201,17 +208,18 @@ public class AddNewGroupRestaurantFragment extends Fragment {
             groupCity = prev.getString("groupCity");
             groupDistrict = prev.getString("groupDistrict");
             groupDescription = prev.getString("groupDescription");
+            groupImageBase64 = prev.getString("groupImage");
+            groupTags = prev.getStringArrayList("groupTags");
 
-
-
-            // 再次檢查是否所有資訊都存在
-            if (groupName == null || groupPhone == null || groupLocation == null || orderingTime == null || collectionTime == null) {
-                Toast.makeText(getActivity(), "團購基本資訊缺失，無法提交！", Toast.LENGTH_LONG).show();
-                Log.e(TAG, "Missing group basic info: " +
+            if (groupName == null || groupPhone == null || groupLocation == null || orderingTime == null || collectionTime == null || groupCity == null || groupDistrict == null || groupDescription == null || groupImageBase64 == null || groupTags == null || groupTags.isEmpty()) {
+                Toast.makeText(getActivity(), "團購基本資訊缺失或類型未選，無法提交！", Toast.LENGTH_LONG).show();
+                Log.e(TAG, "Missing group basic info or tags: " +
                         "name=" + groupName + ", phone=" + groupPhone +
                         ", location=" + groupLocation + ", orderingTime=" + orderingTime +
                         ", collectionTime=" + collectionTime +
-                        ", city=" + groupCity + ", district=" + groupDistrict + ", description=" + groupDescription);
+                        ", city=" + groupCity + ", district=" + groupDistrict + ", description=" + groupDescription +
+                        ", image=" + (groupImageBase64 != null ? "present" : "missing") +
+                        ", tags=" + (groupTags != null ? groupTags.toString() : "null"));
                 return;
             }
 
@@ -225,7 +233,7 @@ public class AddNewGroupRestaurantFragment extends Fragment {
                 return;
             }
 
-            String uid = db.collection("groups").document().getId(); // 生成新的文檔ID
+            String uid = db.collection("groups").document().getId(); // Generate new document ID
 
             Map<String, Object> group = new HashMap<>();
             group.put("name", groupName);
@@ -237,7 +245,8 @@ public class AddNewGroupRestaurantFragment extends Fragment {
             group.put("city", groupCity);
             group.put("district", groupDistrict);
             group.put("description", groupDescription);
-
+            group.put("image", groupImageBase64);
+            group.put("tag", groupTags);
 
             List<DocumentReference> restaurantRefs = new ArrayList<>();
             for (String restId : selectedRestaurantIds) {
@@ -245,7 +254,16 @@ public class AddNewGroupRestaurantFragment extends Fragment {
                 Log.d(TAG, "Adding restaurant reference: " + restId);
             }
             group.put("restaurant", restaurantRefs);
-            group.put("creatorId", creatorId);
+            group.put("uid", creatorId);
+
+            // Generate and add search keywords
+            if (groupName != null) {
+                List<String> searchKeywords = generateSearchKeywords(groupName);
+                group.put("searchKeywords", searchKeywords);
+                Log.d(TAG, "Generated search keywords: " + searchKeywords.toString());
+            } else {
+                Log.w(TAG, "groupName is null, cannot generate search keywords.");
+            }
 
             Log.d(TAG, "Attempting to submit group data: " + group.toString());
 
@@ -253,7 +271,7 @@ public class AddNewGroupRestaurantFragment extends Fragment {
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(getActivity(), "團購資料已提交！", Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "Group data submitted successfully! Group ID: " + uid);
-                        getActivity().finish(); // 完成 Activity
+                        getActivity().finish(); // Finish Activity
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(getActivity(), "提交失敗：" + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -263,7 +281,7 @@ public class AddNewGroupRestaurantFragment extends Fragment {
 
         btnBack.setOnClickListener(v -> {
             if (callback != null) {
-                callback.onSwitchToGroupInfo(); // 通知 Activity 切換回 GroupInfoFragment
+                callback.onSwitchToGroupInfo(); // Notify Activity to switch back to GroupInfoFragment
                 Log.d(TAG, "Back button clicked. Switching to GroupInfo.");
             }
         });
@@ -271,10 +289,29 @@ public class AddNewGroupRestaurantFragment extends Fragment {
         return view;
     }
 
+
+    private List<String> generateSearchKeywords(String text) {
+        List<String> keywords = new ArrayList<>();
+        if (text == null || text.trim().isEmpty()) {
+            keywords.add(""); // Add empty string for empty input
+            return keywords;
+        }
+
+        String cleanedText = text.trim();
+        keywords.add(""); // Add empty string as the first keyword
+
+        for (int i = 0; i < cleanedText.length(); i++) {
+            for (int j = i + 1; j <= cleanedText.length(); j++) {
+                keywords.add(cleanedText.substring(i, j));
+            }
+        }
+        return keywords;
+    }
+
     /**
-     * 輔助方法：根據選中的餐廳 ID 列表獲取餐廳名稱字串
-     * @param allRestaurants 所有餐廳的列表，用於查找名稱
-     * @return 逗號分隔的餐廳名稱字串
+     * Helper method: Get restaurant names string based on selected restaurant ID list
+     * @param allRestaurants List of all restaurants to look up names
+     * @return Comma-separated string of restaurant names
      */
     private String getSelectedRestaurantsNames(List<Restaurant> allRestaurants) {
         StringBuilder sb = new StringBuilder();
