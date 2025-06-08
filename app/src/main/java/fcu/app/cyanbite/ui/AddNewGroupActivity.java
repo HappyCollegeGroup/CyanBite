@@ -31,11 +31,6 @@ public class AddNewGroupActivity extends AppCompatActivity implements OnGroupSwi
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_new_group);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         btnReturn = findViewById(R.id.btn_return);
         tvInfoNumber = findViewById(R.id.tv_info_number);

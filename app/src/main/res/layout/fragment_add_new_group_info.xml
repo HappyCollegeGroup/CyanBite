@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,46 +7,49 @@
     android:orientation="vertical"
     tools:context=".ui.AddNewGroupInfoFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="16dp">
-
-        <ImageButton
-            android:id="@+id/img_btn_pic"
-            android:layout_width="178dp"
-            android:layout_height="137dp"
-            android:scaleType="fitCenter"
-            android:background="@android:color/transparent"
-            android:src="@drawable/camera" />
-
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="新增照片"
-            android:textSize="24sp" />
-    </LinearLayout>
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_weight="1"
-        android:paddingStart="24dp"
-        android:paddingTop="24dp"
-        android:paddingEnd="24dp"
-        android:paddingBottom="16dp">
-
+        android:layout_height="match_parent"
+        android:layout_marginBottom="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingTop="24dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="16dp">
 
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageButton
+                    android:id="@+id/img_btn_pic"
+                    android:layout_width="178dp"
+                    android:layout_height="137dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/camera" />
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="新增照片"
+                    android:textSize="24sp" />
+            </LinearLayout>
 
             <TextView
                 style="@style/TextTitleStyle"
@@ -56,15 +59,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
 
                 <CheckBox
                     android:id="@+id/checkbox_beverage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="飲料"
-                    android:layout_marginEnd="16dp"/>
+                    android:layout_marginEnd="16dp"
+                    android:text="飲料" />
 
                 <CheckBox
                     android:id="@+id/checkbox_bento"
@@ -117,36 +120,36 @@
                     android:inputType="phone" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/textView21"
-                style="@style/TextTitleStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="縣市" />
+<!--            <TextView-->
+<!--                android:id="@+id/textView21"-->
+<!--                style="@style/TextTitleStyle"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="24dp"-->
+<!--                android:text="地址" />-->
 
-            <com.google.android.material.textfield.TextInputLayout style="@style/OutlinedInputStyle">
+<!--            <com.google.android.material.textfield.TextInputLayout style="@style/OutlinedInputStyle">-->
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_group_city"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text" />
-            </com.google.android.material.textfield.TextInputLayout>
+<!--                <com.google.android.material.textfield.TextInputEditText-->
+<!--                    android:id="@+id/et_group_city"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:inputType="text" />-->
+<!--            </com.google.android.material.textfield.TextInputLayout>-->
 
-            <TextView
-                style="@style/TextTitleStyle"
-                android:layout_marginTop="24dp"
-                android:text="地區" />
+<!--            <TextView-->
+<!--                style="@style/TextTitleStyle"-->
+<!--                android:layout_marginTop="24dp"-->
+<!--                android:text="地區" />-->
 
-            <com.google.android.material.textfield.TextInputLayout style="@style/OutlinedInputStyle">
+<!--            <com.google.android.material.textfield.TextInputLayout style="@style/OutlinedInputStyle">-->
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_group_district"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text" />
-            </com.google.android.material.textfield.TextInputLayout>
+<!--                <com.google.android.material.textfield.TextInputEditText-->
+<!--                    android:id="@+id/et_group_district"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:inputType="text" />-->
+<!--            </com.google.android.material.textfield.TextInputLayout>-->
 
 
             <TextView
@@ -163,6 +166,8 @@
                     android:id="@+id/et_group_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:clickable="true"
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -196,13 +201,29 @@
         </LinearLayout>
     </ScrollView>
 
-    <Button
+    <!--    <Button-->
+    <!--        android:id="@+id/btn_submit_move_to_restaurant"-->
+    <!--        style="@android:style/Widget.Button"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="新增餐廳"-->
+    <!--        android:textColor="@android:color/white"-->
+    <!--        android:layout_margin="16dp"-->
+    <!--        android:backgroundTint="@color/cyan"/>-->
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_submit_move_to_restaurant"
-        style="@android:style/Widget.Button"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="新增餐廳"
-        android:textColor="@android:color/white"
-        android:layout_margin="16dp"
-        android:backgroundTint="@color/cyan"/>
-</LinearLayout>
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="下一步"
+        android:textColor="@color/white"
+        app:backgroundTint="@color/cyan"
+        app:cornerRadius="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

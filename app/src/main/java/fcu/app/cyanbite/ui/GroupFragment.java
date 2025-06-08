@@ -1,5 +1,7 @@
 package fcu.app.cyanbite.ui;
 
+import static fcu.app.cyanbite.util.Util.setStatusBar;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference; // Import DocumentReference
@@ -47,7 +50,7 @@ public class GroupFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private Button addNewGroup;
+    private FloatingActionButton addNewGroup;
     private FirebaseFirestore db;
     private ActivityResultLauncher<Intent> addGroupLauncher;
 
@@ -100,6 +103,7 @@ public class GroupFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        setStatusBar(getActivity(), true);
         loadGroupData();
     }
 
@@ -107,12 +111,6 @@ public class GroupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_group, container, false);
-
-        Button btnShoppingCart = view.findViewById(R.id.btn_shopping_cart);
-        btnShoppingCart.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), ShoppingCartActivity.class);
-            startActivity(intent);
-        });
 
         db = FirebaseFirestore.getInstance();
 

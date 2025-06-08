@@ -1,5 +1,7 @@
 package fcu.app.cyanbite.ui;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +10,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -54,6 +58,7 @@ public class AddNewGroupInfoFragment extends Fragment {
     private String groupImageBase64;
     private ImageButton imgButton;
     private Group group;
+    private String city, district;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -65,6 +70,16 @@ public class AddNewGroupInfoFragment extends Fragment {
         }
     }
 
+    private final ActivityResultLauncher<Intent> activityResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    String address = result.getData().getStringExtra("address");
+                    city = result.getData().getStringExtra("city");
+                    district = result.getData().getStringExtra("district");
+                    etGroupLocation.setText(address);
+                }
+            });
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_new_group_info, container, false);
@@ -74,13 +89,19 @@ public class AddNewGroupInfoFragment extends Fragment {
         etGroupLocation = view.findViewById(R.id.et_group_location);
         etGroupOrderingTime = view.findViewById(R.id.et_group_ordering_time);
         etGroupCollectionTime = view.findViewById(R.id.et_group_collection_time);
-        etGroupCity = view.findViewById(R.id.et_group_city);
-        etGroupDistrict = view.findViewById(R.id.et_group_district);
+//        etGroupCity = view.findViewById(R.id.et_group_city);
+//        etGroupDistrict = view.findViewById(R.id.et_group_district);
         etGroupDescription = view.findViewById(R.id.et_group_description);
         imgButton = view.findViewById(R.id.img_btn_pic);
         // Initialize CheckBoxes instead of RadioGroup
         checkboxBeverage = view.findViewById(R.id.checkbox_beverage);
         checkboxBento = view.findViewById(R.id.checkbox_bento);
+
+        etGroupLocation.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), PlaceSelectionActivity.class);
+            intent.putExtra("initial_address", String.valueOf(etGroupLocation.getText()));
+            activityResultLauncher.launch(intent);
+        });
 
         Button btnNext = view.findViewById(R.id.btn_submit_move_to_restaurant);
         btnNext.setOnClickListener(v -> {
@@ -89,8 +110,8 @@ public class AddNewGroupInfoFragment extends Fragment {
             String groupLocation = etGroupLocation.getText().toString().trim();
             String orderingTime = etGroupOrderingTime.getText().toString().trim();
             String collectionTime = etGroupCollectionTime.getText().toString().trim();
-            String groupCity = etGroupCity.getText().toString().trim();
-            String groupDistrict = etGroupDistrict.getText().toString().trim();
+//            String groupCity = etGroupCity.getText().toString().trim();
+//            String groupDistrict = etGroupDistrict.getText().toString().trim();
             String groupDescription = etGroupDescription.getText().toString().trim();
 
             // --- Collect selected tags from CheckBoxes ---
@@ -110,8 +131,7 @@ public class AddNewGroupInfoFragment extends Fragment {
             // --- End of tag collection ---
 
             if (groupName.isEmpty() || groupPhone.isEmpty() || groupLocation.isEmpty()
-                    || orderingTime.isEmpty() || collectionTime.isEmpty() || groupCity.isEmpty()
-                    || groupDistrict.isEmpty() || groupDescription.isEmpty()) {
+                    || orderingTime.isEmpty() || collectionTime.isEmpty() || groupDescription.isEmpty()) {
                 Toast.makeText(getActivity(), "請填寫所有欄位", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -123,8 +143,8 @@ public class AddNewGroupInfoFragment extends Fragment {
             groupData.putString("groupLocation", groupLocation);
             groupData.putString("orderingTime", orderingTime);
             groupData.putString("collectionTime", collectionTime);
-            groupData.putString("groupCity", groupCity);
-            groupData.putString("groupDistrict", groupDistrict);
+            groupData.putString("groupCity", city);
+            groupData.putString("groupDistrict", district);
             groupData.putString("groupDescription", groupDescription);
             groupData.putString("groupImage", groupImageBase64);
             groupData.putStringArrayList("groupTags", (ArrayList<String>) groupTags); // Put the list of tags
