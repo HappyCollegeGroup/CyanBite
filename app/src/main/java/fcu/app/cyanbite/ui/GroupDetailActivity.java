@@ -15,6 +15,8 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.DocumentReference;
@@ -38,6 +40,18 @@ public class GroupDetailActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1; // Request code for image picking
     private String currentGroupImageBase64; // Stores the Base64 string of the current image
     private ImageButton imgButtonGroupDetailPic; // Reference to the ImageButton in the layout
+    private String city, district;
+    private EditText etGroupLocation;
+
+    private final ActivityResultLauncher<Intent> activityResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    String address = result.getData().getStringExtra("address");
+                    city = result.getData().getStringExtra("city");
+                    district = result.getData().getStringExtra("district");
+                    etGroupLocation.setText(address);
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +70,8 @@ public class GroupDetailActivity extends AppCompatActivity {
         String groupLocation = getIntent().getStringExtra("groupLocation");
         String orderingTime = getIntent().getStringExtra("orderingTime");
         String collectionTime = getIntent().getStringExtra("collectionTime");
-        String groupCity = getIntent().getStringExtra("groupCity");
-        String groupDistrict = getIntent().getStringExtra("groupDistrict");
+        city = getIntent().getStringExtra("groupCity");
+        district = getIntent().getStringExtra("groupDistrict");
         String groupDescription = getIntent().getStringExtra("groupDescription");
         currentGroupImageBase64 = getIntent().getStringExtra("groupImage"); // Get the Base64 image string
 
@@ -66,15 +80,21 @@ public class GroupDetailActivity extends AppCompatActivity {
         // Initialize UI components (EditTexts and ImageButton) by finding their IDs
         EditText etGroupName = findViewById(R.id.et_group_detail_name);
         EditText etGroupPhone = findViewById(R.id.et_group_detail_phone);
-        EditText etGroupLocation = findViewById(R.id.et_group_detail_location);
+        etGroupLocation = findViewById(R.id.et_group_detail_location);
         EditText etOrderingTime = findViewById(R.id.et_group_detail_ordering_time);
         EditText etCollectionTime = findViewById(R.id.et_group_detail_collection_time);
         EditText etRestaurant = findViewById(R.id.et_group_detail_restaurant);
-        EditText etGroupCity = findViewById(R.id.et_group_detail_city);
-        EditText etGroupDistrict = findViewById(R.id.et_group_detail_district);
+//        EditText etGroupCity = findViewById(R.id.et_group_detail_city);
+//        EditText etGroupDistrict = findViewById(R.id.et_group_detail_district);
         EditText etGroupDescription = findViewById(R.id.et_group_detail_description);
         imgButtonGroupDetailPic = findViewById(R.id.img_btn_group_detail_pic);
 
+
+        etGroupLocation.setOnClickListener(v -> {
+            Intent intent = new Intent(this, PlaceSelectionActivity.class);
+            intent.putExtra("initial_address", String.valueOf(etGroupLocation.getText()));
+            activityResultLauncher.launch(intent);
+        });
 
         // Set the retrieved data to the corresponding EditText fields
         etGroupName.setText(originalGroupName);
@@ -82,8 +102,8 @@ public class GroupDetailActivity extends AppCompatActivity {
         etGroupLocation.setText(groupLocation);
         etOrderingTime.setText(orderingTime);
         etCollectionTime.setText(collectionTime);
-        etGroupCity.setText(groupCity);
-        etGroupDistrict.setText(groupDistrict);
+//        etGroupCity.setText(groupCity);
+//        etGroupDistrict.setText(groupDistrict);
         etGroupDescription.setText(groupDescription);
 
         // --- Image Display Logic ---
@@ -163,8 +183,8 @@ public class GroupDetailActivity extends AppCompatActivity {
             String newOrderingTime = etOrderingTime.getText().toString();
             String newCollectionTime = etCollectionTime.getText().toString();
             String restaurantInput = etRestaurant.getText().toString().trim();
-            String newCity = etGroupCity.getText().toString().trim();
-            String newDistrict = etGroupDistrict.getText().toString().trim();
+//            String newCity = etGroupCity.getText().toString().trim();
+//            String newDistrict = etGroupDistrict.getText().toString().trim();
             String newDescription = etGroupDescription.getText().toString().trim();
 
             // Parse the restaurant input string into a list of names
@@ -191,7 +211,7 @@ public class GroupDetailActivity extends AppCompatActivity {
                             List<DocumentReference> newRestaurantReferences = new ArrayList<>();
                             if (inputRestaurantNames.isEmpty()) {
                                 // If no restaurant names are entered, update the group without any restaurant references
-                                updateGroup(docId, newName, newPhone, newLocation, newOrderingTime, newCollectionTime, newCity, newDistrict, newDescription, currentGroupImageBase64, newRestaurantReferences);
+                                updateGroup(docId, newName, newPhone, newLocation, newOrderingTime, newCollectionTime, city, district, newDescription, currentGroupImageBase64, newRestaurantReferences);
                             } else {
                                 // Query for each restaurant name to get its DocumentReference
                                 final int[] completedRestaurantQueries = {0};
@@ -210,14 +230,14 @@ public class GroupDetailActivity extends AppCompatActivity {
                                                 completedRestaurantQueries[0]++;
                                                 // Only update the group after all restaurant queries have completed
                                                 if (completedRestaurantQueries[0] == inputRestaurantNames.size()) {
-                                                    updateGroup(docId, newName, newPhone, newLocation, newOrderingTime, newCollectionTime, newCity, newDistrict, newDescription, currentGroupImageBase64, newRestaurantReferences);
+                                                    updateGroup(docId, newName, newPhone, newLocation, newOrderingTime, newCollectionTime, city, district, newDescription, currentGroupImageBase64, newRestaurantReferences);
                                                 }
                                             })
                                             .addOnFailureListener(e -> {
                                                 Toast.makeText(this, "查詢餐廳失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show();
                                                 completedRestaurantQueries[0]++;
                                                 if (completedRestaurantQueries[0] == inputRestaurantNames.size()) {
-                                                    updateGroup(docId, newName, newPhone, newLocation, newOrderingTime, newCollectionTime, newCity, newDistrict, newDescription, currentGroupImageBase64, newRestaurantReferences);
+                                                    updateGroup(docId, newName, newPhone, newLocation, newOrderingTime, newCollectionTime, city, district, newDescription, currentGroupImageBase64, newRestaurantReferences);
                                                 }
                                             });
                                 }
@@ -243,7 +263,7 @@ public class GroupDetailActivity extends AppCompatActivity {
                         if (!querySnapshot.isEmpty()) {
                             String docId = querySnapshot.getDocuments().get(0).getId(); // Get the document ID
 
-                            db.collection("groups").document(docId)
+                            db.collection("group").document(docId)
                                     .delete() // Perform the delete operation
                                     .addOnSuccessListener(unused -> {
                                         Toast.makeText(this, "群組已成功刪除！", Toast.LENGTH_SHORT).show();

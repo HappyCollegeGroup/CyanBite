@@ -56,47 +56,47 @@ public class ShoppingCartFoodAdapter extends RecyclerView.Adapter<ShoppingCartFo
         });
 
         // 點擊整個項目，開啟 BottomSheet 查看詳情與刪除
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context);
-                View dialog = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_check_order, null);
-
-                ((ImageView) dialog.findViewById(R.id.iv_btm_sheet_food)).setImageResource(food.getImageResId());
-                ((TextView) dialog.findViewById(R.id.tv_btm_sheet_name)).setText(food.getName());
-                ((TextView) dialog.findViewById(R.id.tv_btm_sheet_price)).setText("$ " + food.getPrice());
-
-                // BottomSheet 刪除按鈕
-                Button deleteButton = dialog.findViewById(R.id.btn_btm_sheet_delete);
-                if (deleteButton != null) {
-                    deleteButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            int pos = holder.getAdapterPosition();
-                            if (pos != RecyclerView.NO_POSITION) {
-                                foodList.remove(pos);
-                                notifyItemRemoved(pos);
-                            }
-                            bottomSheetDialog.dismiss();
-                        }
-                    });
-                }
-
-                // BottomSheet 取消按鈕
-                Button cancelButton = dialog.findViewById(R.id.btn_btm_sheet_cancel);
-                if (cancelButton != null) {
-                    cancelButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            bottomSheetDialog.dismiss();
-                        }
-                    });
-                }
-
-                bottomSheetDialog.setContentView(dialog);
-                bottomSheetDialog.show();
-            }
-        });
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context);
+//                View dialog = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_check_order, null);
+//
+//                ((ImageView) dialog.findViewById(R.id.iv_btm_sheet_food)).setImageResource(food.getImageResId());
+//                ((TextView) dialog.findViewById(R.id.tv_btm_sheet_name)).setText(food.getName());
+//                ((TextView) dialog.findViewById(R.id.tv_btm_sheet_price)).setText("$ " + food.getPrice());
+//
+//                // BottomSheet 刪除按鈕
+//                Button deleteButton = dialog.findViewById(R.id.btn_btm_sheet_delete);
+//                if (deleteButton != null) {
+//                    deleteButton.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            int pos = holder.getAdapterPosition();
+//                            if (pos != RecyclerView.NO_POSITION) {
+//                                foodList.remove(pos);
+//                                notifyItemRemoved(pos);
+//                            }
+//                            bottomSheetDialog.dismiss();
+//                        }
+//                    });
+//                }
+//
+//                // BottomSheet 取消按鈕
+//                Button cancelButton = dialog.findViewById(R.id.btn_btm_sheet_cancel);
+//                if (cancelButton != null) {
+//                    cancelButton.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            bottomSheetDialog.dismiss();
+//                        }
+//                    });
+//                }
+//
+//                bottomSheetDialog.setContentView(dialog);
+//                bottomSheetDialog.show();
+//            }
+//        });
     }
 
     @Override

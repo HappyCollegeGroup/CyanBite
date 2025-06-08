@@ -91,76 +91,93 @@ public class RestaurantMenuListAdapter extends RecyclerView.Adapter {
     }
 
     private void showBottomSheet(Food food) {
-        currentBottomSheetDialog = new BottomSheetDialog(context);
-        View dialog = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_edit_menu, null);
+        if (add) {
+            currentBottomSheetDialog = new BottomSheetDialog(context);
+            View dialog = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_edit_menu, null);
 
-        EditText etName = dialog.findViewById(R.id.et_food_name);
-        EditText etPrice = dialog.findViewById(R.id.et_food_price);
-        Button btnSave = dialog.findViewById(R.id.btn_save);
-        Button btnCancel = dialog.findViewById(R.id.btn_cancel);
-        ImageButton imgbtn = dialog.findViewById(R.id.img_btn_food);
+            EditText etName = dialog.findViewById(R.id.et_food_name);
+            EditText etPrice = dialog.findViewById(R.id.et_food_price);
+            Button btnSave = dialog.findViewById(R.id.btn_save);
+            Button btnCancel = dialog.findViewById(R.id.btn_cancel);
+            ImageButton imgbtn = dialog.findViewById(R.id.img_btn_food);
 
-        currentImageButton = imgbtn;
-        currentEditingFood = food;
+            currentImageButton = imgbtn;
+            currentEditingFood = food;
 
-        if (food != null) {
-            etName.setText(food.getName());
-            etPrice.setText(String.valueOf(food.getPrice()));
-            imgbtn.setImageBitmap(food.getImageBitmap());
+            if (food != null) {
+                etName.setText(food.getName());
+                etPrice.setText(String.valueOf(food.getPrice()));
+                imgbtn.setImageBitmap(food.getImageBitmap());
 
-            btnCancel.setText("刪除");
+                btnCancel.setText("刪除");
 //            btnCancel.setBackgroundColor(context.getColor(android.R.color.holo_red_light));
-            btnCancel.setOnClickListener(v -> {
-                int index = foodList.indexOf(food);
-                if (index >= 0) {
-                    foodList.remove(index);
-                    notifyItemRemoved(index + 1);
-                }
-                currentBottomSheetDialog.dismiss();
-                clearCurrentEditing();
-            });
-        } else {
-            btnCancel.setText("取消");
-//            btnCancel.setBackgroundColor(context.getColor(android.R.color.darker_gray));
-            btnCancel.setOnClickListener(v -> {
-                currentBottomSheetDialog.dismiss();
-                clearCurrentEditing();
-            });
-        }
-
-        imgbtn.setOnClickListener(v -> {
-            imageSelectListener.onSelectImageRequested(food, imgbtn);
-        });
-
-        btnSave.setOnClickListener(v -> {
-            String name = etName.getText().toString().trim();
-            String priceStr = etPrice.getText().toString().trim();
-
-            if (name.isEmpty() || priceStr.isEmpty()) {
-                Toast.makeText(context, "請填寫完整資訊", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            Long price = Long.parseLong(priceStr);
-
-            if (food == null) {
-                // 新增
-                foodList.add(new Food(name, price, currentbase64));
-                notifyItemInserted(foodList.size());
+                btnCancel.setOnClickListener(v -> {
+                    int index = foodList.indexOf(food);
+                    if (index >= 0) {
+                        foodList.remove(index);
+                        notifyItemRemoved(index + 1);
+                    }
+                    currentBottomSheetDialog.dismiss();
+                    clearCurrentEditing();
+                });
             } else {
-                // 編輯
-                food.setName(name);
-                food.setPrice(price);
-                food.setImage(currentbase64);
-                notifyDataSetChanged();
+                btnCancel.setText("取消");
+//            btnCancel.setBackgroundColor(context.getColor(android.R.color.darker_gray));
+                btnCancel.setOnClickListener(v -> {
+                    currentBottomSheetDialog.dismiss();
+                    clearCurrentEditing();
+                });
             }
 
-            currentBottomSheetDialog.dismiss();
-            clearCurrentEditing();
-        });
+            imgbtn.setOnClickListener(v -> {
+                imageSelectListener.onSelectImageRequested(food, imgbtn);
+            });
 
-        currentBottomSheetDialog.setContentView(dialog);
-        currentBottomSheetDialog.show();
+            btnSave.setOnClickListener(v -> {
+                String name = etName.getText().toString().trim();
+                String priceStr = etPrice.getText().toString().trim();
+
+                if (name.isEmpty() || priceStr.isEmpty()) {
+                    Toast.makeText(context, "請填寫完整資訊", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Long price = Long.parseLong(priceStr);
+
+                if (food == null) {
+                    // 新增
+                    foodList.add(new Food(name, price, currentbase64));
+                    notifyItemInserted(foodList.size());
+                } else {
+                    // 編輯
+                    food.setName(name);
+                    food.setPrice(price);
+                    food.setImage(currentbase64);
+                    notifyDataSetChanged();
+                }
+
+                currentBottomSheetDialog.dismiss();
+                clearCurrentEditing();
+            });
+
+            currentBottomSheetDialog.setContentView(dialog);
+            currentBottomSheetDialog.show();
+        } else {
+            currentBottomSheetDialog = new BottomSheetDialog(context);
+            View dialog = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_check_order, null);
+            TextView etName = dialog.findViewById(R.id.tv_btm_sheet_name);
+            TextView etPrice = dialog.findViewById(R.id.tv_btm_sheet_price);
+            ImageView imgbtn = dialog.findViewById(R.id.iv_btm_sheet_food);
+            Button btnCancel = dialog.findViewById(R.id.btn_btm_sheet_cancel);
+
+            etName.setText(food.getName());
+            etPrice.setText("$ " + food.getPrice());
+            imgbtn.setImageBitmap(food.getImageBitmap());
+            btnCancel.setOnClickListener(view -> {currentBottomSheetDialog.dismiss();});
+
+            currentBottomSheetDialog.setContentView(dialog);
+            currentBottomSheetDialog.show();
+        }
     }
 
     private void clearCurrentEditing() {

@@ -59,28 +59,15 @@
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <Button
-        android:id="@+id/btn_btm_sheet_delete"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="24dp"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:text="刪除"
-        android:textColor="#ffffff"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_btm_sheet_price" />
-
-    <Button
         android:id="@+id/btn_btm_sheet_cancel"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
         android:text="關閉"
         android:textColor="@color/cyan"
-        app:layout_constraintEnd_toStartOf="@+id/btn_btm_sheet_delete"
-        app:layout_constraintTop_toTopOf="@+id/btn_btm_sheet_delete" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_btm_sheet_price" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
