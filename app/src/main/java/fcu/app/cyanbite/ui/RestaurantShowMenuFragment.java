@@ -89,7 +89,7 @@ public class RestaurantShowMenuFragment extends Fragment implements ImageSelectL
             foodList = new ArrayList<>();
         }
 
-        adapter = new RestaurantMenuListAdapter(requireContext(), foodList, this);
+        adapter = new RestaurantMenuListAdapter(requireContext(), foodList, this, false);
         recyclerView.setAdapter(adapter);
 
         return view;

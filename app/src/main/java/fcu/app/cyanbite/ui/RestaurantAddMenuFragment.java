@@ -196,7 +196,7 @@ public class RestaurantAddMenuFragment extends Fragment implements ImageSelectLi
         // 不要加「新增」，adapter 會自動補上！
 
         // 設定 Adapter
-        adapter = new RestaurantMenuListAdapter(requireContext(), foodList, this);
+        adapter = new RestaurantMenuListAdapter(requireContext(), foodList, this, true);
         recyclerView.setAdapter(adapter);
 
         pickImageLauncher = registerForActivityResult(

@@ -57,7 +57,7 @@ public class RestaurantShowInfoFragment extends Fragment {
             tvName.setText(currentRestaurant.getName());
             tvPhone.setText(currentRestaurant.getPhone());
             tvLocation.setText(currentRestaurant.getLocation());
-
+            imgButton.setImageBitmap(currentRestaurant.getImageBitmap());
             // 處理圖片載入，請根據您的 Restaurant.getImage() 返回的類型選擇
             // 如果是圖片資源 ID (int):
             // imgButton.setImageResource(currentRestaurant.getImage());

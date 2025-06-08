@@ -199,7 +199,7 @@ public class RestaurantManageMenuFragment extends Fragment implements ImageSelec
             foodList = new ArrayList<>();  // 若為空則避免閃退
         }
 
-        adapter = new RestaurantMenuListAdapter(requireContext(), foodList , this);
+        adapter = new RestaurantMenuListAdapter(requireContext(), foodList , this, true);
         recyclerView.setAdapter(adapter);
 
         pickImageLauncher = registerForActivityResult(

@@ -38,16 +38,18 @@ public class RestaurantMenuListAdapter extends RecyclerView.Adapter {
     private String currentbase64;
     private Bitmap currentbitmap;
 
+    private boolean add;
 
-    public RestaurantMenuListAdapter(Context context, List<Food> foodList, ImageSelectListener listener) {
+    public RestaurantMenuListAdapter(Context context, List<Food> foodList, ImageSelectListener listener, boolean add) {
         this.context = context;
         this.foodList = foodList;
         this.imageSelectListener = listener;
+        this.add = add;
     }
 
 
     public int getItemViewType(int position) {
-        return (position == 0) ? 0 : 1;
+        return (add && position == 0) ? 0 : 1;
     }
 
     @NonNull
@@ -74,7 +76,7 @@ public class RestaurantMenuListAdapter extends RecyclerView.Adapter {
                 showBottomSheet(null); // 傳 null 表示是新增
             });
         } else {
-            Food food = foodList.get(position - 1); // position 要減 1
+            Food food = foodList.get(position - (add ? 1 : 0)); // position 要減 1
             ViewHolder vh = (ViewHolder) holder;
             vh.tvName.setText(food.getName());
             vh.tvPrice.setText("$ " + food.getPrice());
@@ -208,7 +210,7 @@ public class RestaurantMenuListAdapter extends RecyclerView.Adapter {
 
     public int getItemCount() {
         // +1：永遠保留第一個是「新增」
-        return foodList.size() + 1;
+        return foodList.size() + (add ? 1 : 0);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

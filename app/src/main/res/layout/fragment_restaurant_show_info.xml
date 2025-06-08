@@ -14,6 +14,7 @@
             android:id="@+id/img_btn_restaurant"
             android:layout_width="178dp"
             android:layout_height="137dp"
+            android:layout_marginTop="32dp"
             android:background="@android:color/transparent"
             android:src="@drawable/camera"
             app:layout_constraintEnd_toEndOf="parent"
@@ -90,24 +91,39 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
             android:text="取消"
             android:textColor="@color/cyan"
-            app:layout_constraintEnd_toStartOf="@+id/btn_next"
-            app:layout_constraintTop_toBottomOf="@+id/et_location" />
+            app:layout_constraintBottom_toBottomOf="@+id/btn_next"
+            app:layout_constraintEnd_toStartOf="@+id/btn_next" />
 
-        <Button
+<!--        <Button-->
+<!--            android:id="@+id/btn_next"-->
+<!--            style="@android:style/Widget.Button"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="32dp"-->
+<!--            android:layout_marginEnd="24dp"-->
+<!--            android:text="查看餐點"-->
+<!--            android:textColor="#ffffff"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/et_location" />-->
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_next"
-            style="@android:style/Widget.Button"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="24dp"
-            android:text="下一步"
-            android:textColor="#ffffff"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_location" />
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="24dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="查看餐點"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/cyan"
+            app:cornerRadius="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
