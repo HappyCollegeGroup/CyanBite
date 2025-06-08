@@ -76,9 +76,13 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
         holder.btnDelete.setOnClickListener(v -> {
             if (deleteClickListener != null) {
-                deleteClickListener.onDeleteClick(order, position);
+                int realPosition = holder.getAdapterPosition();
+                if (realPosition != RecyclerView.NO_POSITION) {
+                    deleteClickListener.onDeleteClick(orderList.get(realPosition), realPosition);
+                }
             }
         });
+
     }
 
     @Override
