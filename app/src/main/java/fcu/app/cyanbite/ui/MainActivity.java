@@ -2,7 +2,9 @@ package fcu.app.cyanbite.ui;
 
 import static fcu.app.cyanbite.util.Util.navigateTo;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.FirebaseApp;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import fcu.app.cyanbite.R;
 
@@ -31,7 +34,14 @@ public class MainActivity extends AppCompatActivity {
 
         initFirebase();
         checkIsLogin();
-        initBottomNavigationView();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (authListener != null) {
+            mAuth.removeAuthStateListener(authListener);
+        }
     }
 
     private void initFirebase() {
@@ -71,8 +81,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkIsLogin() {
-        if (mAuth.getCurrentUser() == null) {
+        SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        boolean isLogin = prefs.getBoolean("isLogin", false);
+
+        if (!isLogin || mAuth.getCurrentUser() == null) {
             navigateTo(this, LoginActivity.class);
+        } else {
+            mAuth.addAuthStateListener(authListener);
         }
     }
+
+    FirebaseAuth.AuthStateListener authListener = firebaseAuth -> {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user == null) {
+            // 使用者未登入（或憑證已失效）
+            navigateTo(this, LoginActivity.class);
+        } else {
+            // 使用者登入中
+            Log.d("Firebase", "User still logged in");
+            initBottomNavigationView();
+        }
+    };
 }

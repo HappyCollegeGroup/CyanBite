@@ -1,9 +1,11 @@
 package fcu.app.cyanbite.ui;
 
+import static android.content.Context.MODE_PRIVATE;
 import static fcu.app.cyanbite.util.Util.navigateTo;
 import static fcu.app.cyanbite.util.Util.setStatusBar;
 import static fcu.app.cyanbite.util.Util.slideTo;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -99,6 +101,11 @@ public class AccountFragment extends Fragment {
         });
 
         btnLogout.setOnClickListener(view ->  {
+            SharedPreferences prefs = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.clear();
+            editor.apply();
+
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
             mAuth.signOut();;
             navigateTo(getActivity(), LoginActivity.class);

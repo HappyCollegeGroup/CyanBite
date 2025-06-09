@@ -2,6 +2,7 @@ package fcu.app.cyanbite.ui;
 
 import static fcu.app.cyanbite.util.Util.navigateTo;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -75,6 +76,10 @@ public class RegisterActivity extends AppCompatActivity {
 
         mAuth.createUserWithEmailAndPassword(account, password)
                 .addOnSuccessListener(aVoid -> {
+                    SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean("isLogin", true);
+                    editor.apply();
                     navigateTo(this, MainActivity.class);
                 })
                 .addOnFailureListener(e -> {
