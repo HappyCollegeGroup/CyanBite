@@ -178,6 +178,7 @@ public class RestaurantManageMenuFragment extends Fragment implements ImageSelec
                     .update(updates)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(getContext(), "更新成功", Toast.LENGTH_SHORT).show();
+                        getActivity().finish();
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(getContext(), "更新失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -186,7 +187,6 @@ public class RestaurantManageMenuFragment extends Fragment implements ImageSelec
 
 //            Intent intent = new Intent(getActivity(), MainActivity.class);
 //            startActivity(intent);
-            getActivity().finish();
         });
 
         recyclerView = view.findViewById(R.id.rv_manage_menu_list);

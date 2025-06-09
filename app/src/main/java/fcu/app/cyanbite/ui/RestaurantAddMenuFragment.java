@@ -179,13 +179,14 @@ public class RestaurantAddMenuFragment extends Fragment implements ImageSelectLi
                     .set(updates)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(getContext(), "更新成功", Toast.LENGTH_SHORT).show();
+                        requireActivity().finish();
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(getContext(), "更新失敗：" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
 
 //            startActivity(intent);
-            requireActivity().finish();
+//            requireActivity().finish();
         });
 
         recyclerView = view.findViewById(R.id.rv_add_menu_list);
